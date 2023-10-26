@@ -74,7 +74,7 @@ input {
   gap: 0.625rem;
   border-radius: 3rem;
   border: 2px solid #788596;
-  color: #fff;
+  color: #F5ED17;
   font-family: Stellar;
   font-size: 1rem;
   font-style: normal;
@@ -102,7 +102,7 @@ input {
 }
 
 .card-title {
-  color: #fff;
+  color: #F5ED17;
   font-family: ITC Avant Garde Gothic Std;
   font-size: 1.5625rem;
   font-style: normal;
