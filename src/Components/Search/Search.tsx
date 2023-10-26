@@ -54,14 +54,16 @@ export default class Search extends Component {
     ));
 
     return (
-      <div>
-        <input
-          value={this.state.storedSearch}
-          onChange={this.handleSearchChange}
-        />
-        <button onClick={this.search}>Search</button>
+      <div className="content">
+        <div className="search">
+          <input
+            value={this.state.storedSearch}
+            onChange={this.handleSearchChange}
+          />
+          <button onClick={this.search}>Search planets</button>
+        </div>
         {isLoading ? (
-          <div className="loading">Loading...</div>
+          <div className="loading"></div>
         ) : (
           <div className="search-results">{cardComponents}</div>
         )}
