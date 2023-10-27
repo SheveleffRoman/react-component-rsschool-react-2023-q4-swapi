@@ -185,3 +185,9 @@ input {
     transform: translateX(-100%) rotate(180deg);
   }
 }
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
