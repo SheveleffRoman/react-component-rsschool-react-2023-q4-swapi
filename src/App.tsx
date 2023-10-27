@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import Search from './Components/Search/Search';
+import ErrorBoundary from './Components/Error/ErrorBoundary';
 
 export type SearchProps = {
   onSearch: (searchTerm: string) => void;
@@ -24,9 +25,11 @@ export type SearchResultsProps = {
 class App extends Component {
   render() {
     return (
-      <div>
-        <Search />
-      </div>
+      <ErrorBoundary>
+        <div className="wrapper_content">
+          <Search />
+        </div>
+      </ErrorBoundary>
     );
   }
 }
