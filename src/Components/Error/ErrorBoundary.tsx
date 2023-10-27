@@ -31,11 +31,7 @@ export default class ErrorBoundary extends Component<Props, ErrorState> {
   render() {
     if (this.state.hasError) {
       if (this.state.error?.message === 'API ERROR') {
-        return (
-          <h2 className="title">
-            Custom error message for API error.
-          </h2>
-        );
+        return <h2 className="title">Custom error message for API error.</h2>;
       } else {
         return (
           <h2 className="title">
@@ -44,8 +40,7 @@ export default class ErrorBoundary extends Component<Props, ErrorState> {
         );
       }
     }
-  
+
     return this.props.children;
   }
-  
 }
