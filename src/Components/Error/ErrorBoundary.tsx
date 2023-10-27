@@ -31,12 +31,18 @@ export default class ErrorBoundary extends Component<Props, ErrorState> {
   render() {
     if (this.state.hasError) {
       if (this.state.error?.message === 'API ERROR') {
-        return <h2 className="title">Custom error message for API error.</h2>;
+        return (
+          <div className="error-message">
+            <h2 className="title">Fetching data error, please reload page</h2>
+            <img src="./src/assets/icons8-darth-vader.svg" alt="DarthVader" />
+          </div>
+        );
       } else {
         return (
-          <h2 className="title">
-            An unexpected error has occurred, please reload the page.
-          </h2>
+          <div className="error-message">
+            <h2 className="title">Fake error, please reload page</h2>
+            <img src="./src/assets/icons8-darth-vader.svg" alt="DarthVader" />
+          </div>
         );
       }
     }
