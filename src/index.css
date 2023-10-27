@@ -101,6 +101,11 @@ input {
   }
 }
 
+.wrapper_content {
+  width: 100%;
+  display: flex;
+}
+
 .card-title {
   color: #f5ed17;
   font-family: ITC Avant Garde Gothic Std;
@@ -112,7 +117,8 @@ input {
   text-transform: uppercase;
 }
 
-.search {
+.search-panel {
+  margin-top: 1rem;
   margin-bottom: 5rem;
   display: flex;
   flex-direction: row;
