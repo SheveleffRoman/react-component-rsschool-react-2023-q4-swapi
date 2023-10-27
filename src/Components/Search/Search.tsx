@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Card from '../Card/Card';
 import ErrorButton from '../Error/ErrorButton';
+import Loader from '../Loader/Loader';
 
 export default class Search extends Component {
   state = {
@@ -68,7 +69,7 @@ export default class Search extends Component {
           <ErrorButton />
         </div>
         {isLoading ? (
-          <div className="loading"></div>
+          <Loader />
         ) : (
           <div className="search-results">{cardComponents}</div>
         )}
