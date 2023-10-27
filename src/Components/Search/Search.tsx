@@ -51,7 +51,7 @@ export default class Search extends Component {
     const { searchResults, isLoading, error } = this.state;
 
     if (error) {
-      throw new Error('API ERROR', error); // Throw error so that ErrorBoundary can catch it
+      throw new Error('API ERROR', error);
     }
 
     const cardComponents = searchResults.map((item, index) => (
