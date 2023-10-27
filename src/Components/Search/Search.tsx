@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import Card from '../Card/Card';
+import ErrorButton from '../Error/ErrorButton';
 
 export default class Search extends Component {
   state = {
@@ -30,7 +31,6 @@ export default class Search extends Component {
       })
       .catch((error) => {
         this.setState({ searchResults: [], error });
-        console.error(error);
       })
       .finally(() => {
         this.setState({ isLoading: false });
@@ -47,7 +47,11 @@ export default class Search extends Component {
   };
 
   render() {
-    const { searchResults, isLoading } = this.state;
+    const { searchResults, isLoading, error } = this.state;
+
+    if (error) {
+      throw new Error('API ERROR', error); // Throw error so that ErrorBoundary can catch it
+    }
 
     const cardComponents = searchResults.map((item, index) => (
       <Card key={index} data={item} />
@@ -55,12 +59,13 @@ export default class Search extends Component {
 
     return (
       <div className="content">
-        <div className="search">
+        <div className="search-panel">
           <input
             value={this.state.storedSearch}
             onChange={this.handleSearchChange}
           />
           <button onClick={this.search}>Search planets</button>
+          <ErrorButton />
         </div>
         {isLoading ? (
           <div className="loading"></div>
