@@ -30,13 +30,22 @@ export default class ErrorBoundary extends Component<Props, ErrorState> {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <h2 className="title">
-          Error has occurred, please reload the page.
-        </h2>
-      );
+      if (this.state.error?.message === 'API ERROR') {
+        return (
+          <h2 className="title">
+            Custom error message for API error.
+          </h2>
+        );
+      } else {
+        return (
+          <h2 className="title">
+            An unexpected error has occurred, please reload the page.
+          </h2>
+        );
+      }
     }
-
+  
     return this.props.children;
   }
+  
 }
