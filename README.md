@@ -4,7 +4,6 @@
 
 The task should be based on the previous task. We're using [React Router v6.x ](https://reactrouter.com/en/main/start/overview) in this task.
 
-
 ### What should be done:
 
 1. Create a separate branch for this task from the previous task's branch.
