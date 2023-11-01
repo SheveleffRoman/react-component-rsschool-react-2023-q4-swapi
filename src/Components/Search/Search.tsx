@@ -1,26 +1,28 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '../Card/Card';
 import ErrorButton from '../Error/ErrorButton';
 import Loader from '../Loader/Loader';
+import { Planet } from '../../App';
 
-export default class Search extends Component {
-  state = {
-    storedSearch: '',
-    searchResults: [],
-    error: null,
-    isLoading: false,
-  };
+const Search = () => {
+  const [storedSearch, setStoredSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  componentDidMount() {
-    const storedValue = this.getStoredSearchTerm();
-    this.setState({ storedSearch: storedValue });
-    this.handleSearch(storedValue!);
-  }
+  useEffect(() => {
+    const storedValue = getStoredSearchTerm();
+    if (storedValue == '' || storedValue) {
+      setStoredSearch(storedValue);
+      handleSearch(storedValue);
+    }
+  }, []);
 
-  getStoredSearchTerm = () => localStorage.getItem('searchTerm');
+  const getStoredSearchTerm = (): string | null =>
+    localStorage.getItem('searchTerm');
 
-  handleSearch = (searchTerm = '') => {
-    this.setState({ isLoading: true });
+  const handleSearch = (searchTerm: string = '') => {
+    setIsLoading(true);
     const apiUrl = searchTerm
       ? `https://swapi.dev/api/planets/?search=${searchTerm}`
       : 'https://swapi.dev/api/planets/';
@@ -28,52 +30,49 @@ export default class Search extends Component {
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ searchResults: data.results, error: null });
+        setSearchResults(data.results);
+        setError(null);
       })
       .catch((error) => {
-        this.setState({ searchResults: [], error });
+        setSearchResults([]);
+        setError(error);
       })
       .finally(() => {
-        this.setState({ isLoading: false });
+        setIsLoading(false);
       });
   };
 
-  handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ storedSearch: event.target.value });
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStoredSearch(event.target.value);
   };
 
-  search = () => {
-    localStorage.setItem('searchTerm', this.state.storedSearch.trim());
-    this.handleSearch(this.state.storedSearch.trim());
+  const searchClick = () => {
+    localStorage.setItem('searchTerm', storedSearch.trim());
+    handleSearch(storedSearch.trim());
   };
 
-  render() {
-    const { searchResults, isLoading, error } = this.state;
-
-    if (error) {
-      throw new Error('API ERROR', error);
-    }
-
-    const cardComponents = searchResults.map((item, index) => (
-      <Card key={index} data={item} />
-    ));
-
-    return (
-      <div className="content">
-        <div className="search-panel">
-          <input
-            value={this.state.storedSearch}
-            onChange={this.handleSearchChange}
-          />
-          <button onClick={this.search}>Search planets</button>
-          <ErrorButton />
-        </div>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="search-results">{cardComponents}</div>
-        )}
-      </div>
-    );
+  if (error) {
+    throw new Error('API ERROR', error);
   }
-}
+
+  const cardComponents = searchResults.map((item: Planet) => (
+    <Card key={item.name} data={item} />
+  ));
+
+  return (
+    <div className="content">
+      <div className="search-panel">
+        <input value={storedSearch} onChange={handleSearchChange} />
+        <button onClick={searchClick}>Search planets</button>
+        <ErrorButton />
+      </div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="search-results">{cardComponents}</div>
+      )}
+    </div>
+  );
+};
+
+export default Search;

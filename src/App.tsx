@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import Search from './Components/Search/Search';
 import ErrorBoundary from './Components/Error/ErrorBoundary';
 
@@ -22,16 +21,14 @@ export type SearchResultsProps = {
   error: Error | null;
 };
 
-class App extends Component {
-  render() {
-    return (
-      <ErrorBoundary>
-        <div className="wrapper_content">
-          <Search />
-        </div>
-      </ErrorBoundary>
-    );
-  }
-}
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <div className="wrapper_content">
+        <Search />
+      </div>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
