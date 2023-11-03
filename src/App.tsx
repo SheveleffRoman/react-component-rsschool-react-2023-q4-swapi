@@ -13,6 +13,7 @@ export interface Planet {
   population: string;
   terrain: string;
   surface_water: string;
+  url: string;
 }
 
 export type SearchResultsProps = {
