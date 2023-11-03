@@ -23,8 +23,16 @@ const SearchBar: FC<Props> = ({ onSearch }) => {
   return (
     <>
       <div className="search-panel">
-        <input value={storedSearch} onChange={handleSearchChange} />
-        <button onClick={searchClick}>Search planets</button>
+        <form>
+          <input
+            type="search"
+            placeholder="Search"
+            name="search"
+            value={storedSearch}
+            onChange={handleSearchChange}
+          />
+          <button onClick={searchClick}>Search planets</button>
+        </form>
         <ErrorButton />
       </div>
     </>
