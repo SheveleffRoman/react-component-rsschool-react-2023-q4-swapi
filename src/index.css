@@ -168,7 +168,7 @@ input {
 }
 
 .loading {
-  content: url(./src/assets/icons8-star-wars-millenium-falcon-48.png);
+  content: url(./assets/icons8-star-wars-millenium-falcon-48.png);
   width: 100px;
   height: 100px;
   position: absolute;
@@ -196,4 +196,9 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
 }
