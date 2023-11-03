@@ -28,6 +28,7 @@ const Main = () => {
     DataService.getAll(searchTerm)
       .then((response) => {
         const data = response.data;
+        console.log(data);
         setSearchResults(data.results);
       })
       .catch((error) => {

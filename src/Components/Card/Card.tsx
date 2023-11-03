@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface CardProps {
@@ -10,12 +9,15 @@ interface CardProps {
     population: string;
     terrain: string;
     surface_water: string;
+    url: string;
   };
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
+  const parts = data.url.split('/');
+  const lastPart = parts[parts.length - 2];
   return (
-    <Link to={`details/${data.name}`}>
+    <Link to={`details/${lastPart}`}>
       <div className="card">
         <h2 className="card-title">{data.name}</h2>
         <p>Climate: {data.climate}</p>
