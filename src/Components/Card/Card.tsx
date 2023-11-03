@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface CardProps {
   data: {
@@ -14,15 +15,17 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ data }) => {
   return (
-    <div className="card">
-      <h2 className="card-title">{data.name}</h2>
-      <p>Climate: {data.climate}</p>
-      <p>Diameter: {data.diameter}</p>
-      <p>Rotation period: {data.rotation_period}</p>
-      <p>Population: {data.population}</p>
-      <p>Terrain: {data.terrain}</p>
-      <p>Surface water: {data.surface_water}%</p>
-    </div>
+    <Link to={`details/${data.name}`}>
+      <div className="card">
+        <h2 className="card-title">{data.name}</h2>
+        <p>Climate: {data.climate}</p>
+        <p>Diameter: {data.diameter}</p>
+        <p>Rotation period: {data.rotation_period}</p>
+        <p>Population: {data.population}</p>
+        <p>Terrain: {data.terrain}</p>
+        <p>Surface water: {data.surface_water}%</p>
+      </div>
+    </Link>
   );
 };
 
