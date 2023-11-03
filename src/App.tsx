@@ -1,5 +1,5 @@
+import { Outlet } from 'react-router-dom';
 import ErrorBoundary from './Components/Error/ErrorBoundary';
-import Main from './Pages/Main/MainPage';
 
 export type SearchProps = {
   onSearch: (searchTerm: string) => void;
@@ -25,7 +25,7 @@ const App = () => {
   return (
     <ErrorBoundary>
       <div className="wrapper_content">
-        <Main />
+        <Outlet />
       </div>
     </ErrorBoundary>
   );
