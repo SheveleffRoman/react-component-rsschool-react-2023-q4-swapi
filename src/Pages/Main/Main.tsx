@@ -4,6 +4,7 @@ import { Planet } from '../../App';
 import SearchBar from '../../Components/SearchBar/SearchBar';
 import Card from '../../Components/Card/Card';
 import Loader from '../../Components/Loader/Loader';
+import { Outlet } from 'react-router-dom';
 
 const Main = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -51,7 +52,10 @@ const Main = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="search-results">{cardComponents}</div>
+        <div className="results-container">
+          <div className="search-results">{cardComponents}</div>
+          <Outlet />
+        </div>
       )}
     </>
   );
