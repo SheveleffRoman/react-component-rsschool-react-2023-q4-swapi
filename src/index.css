@@ -106,6 +106,7 @@ input {
   flex-direction: column;
   max-width: 100%;
   width: 100%;
+  align-items: center;
 }
 
 .card-title {
@@ -130,6 +131,7 @@ input {
 
 .results-container {
   display: flex;
+  margin-bottom: 2rem;
 }
 
 .search-results {
@@ -201,4 +203,9 @@ input {
 .details {
   display: flex;
   flex-direction: column;
+}
+
+.pagination {
+  display: flex;
+  gap: 1rem;
 }
