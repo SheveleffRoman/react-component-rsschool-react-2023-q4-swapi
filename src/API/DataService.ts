@@ -13,6 +13,11 @@ export default class DataService {
     return response;
   }
 
+  static async getByPage(url: string) {
+    const response = await axios.get(url);
+    return response;
+  }
+
   static async getById(id: string) {
     const response = await axios.get(baseURL + id);
     return response;
