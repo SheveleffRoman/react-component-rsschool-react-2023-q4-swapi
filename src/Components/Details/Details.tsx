@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import DataService from '../../API/DataService';
 
 interface Resident {
   name: string;
 }
 
+interface Props {
+  closeDetails: () => void;
+}
+
 const Details = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [planet, setPlanet] = useState({ name: '', residents: [] });
   const [residentsData, setResidentsData] = useState<Resident[]>([]);
   const [error, setError] = useState('Error');
   const [loading, setLoading] = useState(false);
+
+  const { closeDetails }: Props = useOutletContext();
 
   const peopleDetails = (id: string) => {
     setLoading(true);
@@ -69,7 +74,7 @@ const Details = () => {
               ))
             )}
           </ul>
-          <button type="button" onClick={() => navigate('/')}>
+          <button type="button" onClick={closeDetails}>
             back
           </button>
         </>

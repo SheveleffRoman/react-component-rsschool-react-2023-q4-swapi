@@ -108,7 +108,7 @@ const Main = () => {
             <div className="search-results" onClick={closeDetails}>
               {cardComponents}
             </div>
-            <Outlet />
+            <Outlet context={{ closeDetails }} />
           </div>
           <div className="pagination">
             <button
