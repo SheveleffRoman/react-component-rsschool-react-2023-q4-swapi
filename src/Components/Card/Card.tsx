@@ -11,14 +11,15 @@ interface CardProps {
     surface_water: string;
     url: string;
   };
+  onClick: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ data }) => {
+const Card: React.FC<CardProps> = ({ data, onClick }) => {
   const parts = data.url.split('/');
   const lastPart = parts[parts.length - 2];
   return (
     <Link to={`details/${lastPart}`}>
-      <div className="card">
+      <div className="card" onClick={onClick}>
         <h2 className="card-title">{data.name}</h2>
         <p>Climate: {data.climate}</p>
         <p>Diameter: {data.diameter}</p>

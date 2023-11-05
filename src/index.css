@@ -203,9 +203,15 @@ input {
 .details {
   display: flex;
   flex-direction: column;
+  border-left: 1px solid #000;
 }
 
 .pagination {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-form {
   display: flex;
   gap: 1rem;
 }

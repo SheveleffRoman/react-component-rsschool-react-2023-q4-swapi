@@ -23,7 +23,7 @@ const SearchBar: FC<Props> = ({ onSearch }) => {
   return (
     <>
       <div className="search-panel">
-        <form>
+        <form className="search-form">
           <input
             type="search"
             placeholder="Search"

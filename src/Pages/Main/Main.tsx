@@ -14,8 +14,20 @@ const Main = () => {
   const [prevPage, setPrevPage] = useState('');
   const [currentPage, setCurrentPage] = useState('1');
   const [totalPages, setTotalPages] = useState(0);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  const openDetails = () => {
+    setIsDetailsOpen(true);
+  };
+
+  const closeDetails = () => {
+    if (isDetailsOpen) {
+      navigate('/');
+      setIsDetailsOpen(false);
+    }
+  };
 
   useEffect(() => {
     const storedValue = getStoredSearchTerm();
@@ -30,6 +42,7 @@ const Main = () => {
 
   const handleSearch = (searchTerm: string = '') => {
     setIsLoading(true);
+    setIsDetailsOpen(false);
 
     DataService.getAll(searchTerm)
       .then((response) => {
@@ -53,6 +66,7 @@ const Main = () => {
 
   const handlePage = (url: string) => {
     setIsLoading(true);
+    setIsDetailsOpen(false);
     setSearchResults([]);
     navigate(`/?search=&page=${url.slice(-1)}`);
     DataService.getByPage(url)
@@ -80,7 +94,7 @@ const Main = () => {
   }
 
   const cardComponents = searchResults.map((item: Planet) => (
-    <Card key={item.name} data={item} />
+    <Card onClick={openDetails} key={item.name} data={item} />
   ));
 
   return (
@@ -91,7 +105,9 @@ const Main = () => {
       ) : (
         <>
           <div className="results-container">
-            <div className="search-results">{cardComponents}</div>
+            <div className="search-results" onClick={closeDetails}>
+              {cardComponents}
+            </div>
             <Outlet />
           </div>
           <div className="pagination">
