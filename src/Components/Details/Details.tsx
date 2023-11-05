@@ -12,16 +12,32 @@ const Details = () => {
 
   const [planet, setPlanet] = useState({ name: '', residents: [] });
   const [residentsData, setResidentsData] = useState<Resident[]>([]);
-  // const [error, setError] = useState('Error');
+  const [error, setError] = useState('Error');
   const [loading, setLoading] = useState(false);
+
+  // const peopleDetails = (id: string) => {
+  //   setLoading(true);
+  //   DataService.getById(id).then((response) => {
+  //     const data = response.data;
+  //     console.log(data);
+  //     setPlanet(data);
+  //   });
+  // };
 
   const peopleDetails = (id: string) => {
     setLoading(true);
-    DataService.getById(id).then((response) => {
-      const data = response.data;
-      console.log(data);
-      setPlanet(data);
-    });
+    DataService.getById(id)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+        setPlanet(data);
+
+        // Здесь вызываем вторую функцию после успешного выполнения первой
+        return fetchResidentsData(data.residents);
+      })
+      .catch((error) => {
+        console.error('Произошла ошибка:', error);
+      });
   };
 
   const fetchResidentsData = (residents: string[]) => {
@@ -35,25 +51,19 @@ const Details = () => {
         setResidentsData(residentsInfo);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error('Error fetching resident data:', error);
+      .catch(() => {
         setError('Error fetching resident data');
+        console.error('Error fetching resident data:', error);
         setLoading(false);
       });
-
     setError('');
   };
 
   useEffect(() => {
-    setResidentsData([]);
     peopleDetails(id!);
   }, []);
 
-  useEffect(() => {
-    if (planet.residents.length > 0) {
-      fetchResidentsData(planet.residents);
-    }
-  }, [planet.residents]);
+  // попробовать объеденить условия загрузки и количества вместе
   return (
     <div className="details">
       {loading ? (
@@ -61,20 +71,18 @@ const Details = () => {
       ) : (
         <>
           <h1>Popular citizens of {planet.name}</h1>
-          {residentsData.length === 0 ? (
-            <h1>Not found</h1>
-          ) : (
-            <>
-              <ul>
-                {residentsData.map((resident: Resident) => (
-                  <li key={resident.name}>{resident.name}</li>
-                ))}
-              </ul>
-              <button type="button" onClick={() => navigate('/')}>
-                back
-              </button>
-            </>
-          )}
+          <ul>
+            {residentsData.length === 0 ? (
+              <h1>Not found</h1>
+            ) : (
+              residentsData.map((resident: Resident) => (
+                <li key={resident.name}>{resident.name}</li>
+              ))
+            )}
+          </ul>
+          <button type="button" onClick={() => navigate('/')}>
+            back
+          </button>
         </>
       )}
     </div>
