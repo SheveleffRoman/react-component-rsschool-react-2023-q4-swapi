@@ -15,15 +15,6 @@ const Details = () => {
   const [error, setError] = useState('Error');
   const [loading, setLoading] = useState(false);
 
-  // const peopleDetails = (id: string) => {
-  //   setLoading(true);
-  //   DataService.getById(id).then((response) => {
-  //     const data = response.data;
-  //     console.log(data);
-  //     setPlanet(data);
-  //   });
-  // };
-
   const peopleDetails = (id: string) => {
     setLoading(true);
     DataService.getById(id)
@@ -31,8 +22,6 @@ const Details = () => {
         const data = response.data;
         console.log(data);
         setPlanet(data);
-
-        // Здесь вызываем вторую функцию после успешного выполнения первой
         return fetchResidentsData(data.residents);
       })
       .catch((error) => {
@@ -63,7 +52,6 @@ const Details = () => {
     peopleDetails(id!);
   }, []);
 
-  // попробовать объеденить условия загрузки и количества вместе
   return (
     <div className="details">
       {loading ? (
