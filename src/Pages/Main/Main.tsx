@@ -45,6 +45,12 @@ const Main = () => {
     setIsLoading(true);
     closeDetails;
 
+    if (searchTerm == '') {
+      navigate(``);
+    } else {
+      navigate(`/?search=${searchTerm}`);
+    }
+
     DataService.getAll(searchTerm)
       .then((response) => {
         const data = response.data;

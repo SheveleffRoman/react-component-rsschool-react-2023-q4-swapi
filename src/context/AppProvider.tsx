@@ -12,6 +12,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentPage, setCurrentPage] = useState<string>('1');
   const [totalPages, setTotalPages] = useState<number>(0);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem('searchTerm') || ''
+  );
 
   const navigate = useNavigate();
 
@@ -44,6 +47,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     isDetailsOpen,
     openDetails,
     closeDetails,
+    searchTerm,
+    setSearchTerm,
   };
 
   return (

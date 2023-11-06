@@ -1,24 +1,32 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import ErrorButton from '../Error/ErrorButton';
+import { useAppContext } from '../../context/appContext.ts';
 
 interface Props {
   onSearch: (value: string) => void;
 }
 
-const SearchBar: FC<Props> = ({ onSearch }) => {
-  const getStoredSearchTerm = (): string | null =>
-    localStorage.getItem('searchTerm');
+const SearchBar: FC<Props> = () => {
+  const { searchTerm, setSearchTerm } = useAppContext();
 
-  const [storedSearch, setStoredSearch] = useState(getStoredSearchTerm() || '');
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStoredSearch(event.target.value);
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    localStorage.setItem('searchTerm', value);
   };
 
-  const searchClick = () => {
-    localStorage.setItem('searchTerm', storedSearch.trim());
-    onSearch(storedSearch);
-  };
+  // const getStoredSearchTerm = (): string | null =>
+  //   localStorage.getItem('searchTerm');
+
+  // const [storedSearch, setStoredSearch] = useState(getStoredSearchTerm() || '');
+
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setStoredSearch(event.target.value);
+  // };
+
+  // const searchClick = () => {
+  //   localStorage.setItem('searchTerm', storedSearch.trim());
+  //   onSearch(storedSearch);
+  // };
 
   return (
     <>
@@ -28,10 +36,10 @@ const SearchBar: FC<Props> = ({ onSearch }) => {
             type="search"
             placeholder="Search"
             name="search"
-            value={storedSearch}
-            onChange={handleSearchChange}
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          <button onClick={searchClick}>Search planets</button>
+          <button>Search planets</button>
         </form>
         <ErrorButton />
       </div>

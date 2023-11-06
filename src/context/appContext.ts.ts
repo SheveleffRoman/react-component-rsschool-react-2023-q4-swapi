@@ -19,6 +19,8 @@ export interface AppContextData {
   isDetailsOpen: boolean;
   openDetails: () => void;
   closeDetails: () => void;
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const AppContext = createContext<AppContextData | undefined>(undefined);
