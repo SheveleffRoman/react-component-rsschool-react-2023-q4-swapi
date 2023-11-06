@@ -1,38 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import DataService from '../../API/DataService';
 import { Planet } from '../../App';
 import SearchBar from '../../Components/SearchBar/SearchBar';
 import Card from '../../Components/Card/Card';
 import Loader from '../../Components/Loader/Loader';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../context/appContext.ts';
 
 const Main = () => {
-  const [searchResults, setSearchResults] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [nextPage, setNextPage] = useState('');
-  const [prevPage, setPrevPage] = useState('');
-  const [currentPage, setCurrentPage] = useState('1');
-  const [totalPages, setTotalPages] = useState(0);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const {
+    searchResults,
+    setSearchResults,
+    error,
+    setError,
+    isLoading,
+    setIsLoading,
+    nextPage,
+    setNextPage,
+    prevPage,
+    setPrevPage,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    setTotalPages,
+    openDetails,
+    closeDetails,
+  } = useAppContext();
 
   const navigate = useNavigate();
 
-  const openDetails = () => {
-    setIsDetailsOpen(true);
-  };
-
-  const closeDetails = () => {
-    if (isDetailsOpen) {
-      navigate('/');
-      setIsDetailsOpen(false);
-    }
-  };
-
   useEffect(() => {
+    navigate('/');
     const storedValue = getStoredSearchTerm();
 
-    if (storedValue || storedValue == '') {
+    if (storedValue || storedValue === '') {
       handleSearch(storedValue);
     }
   }, []);
@@ -42,7 +43,7 @@ const Main = () => {
 
   const handleSearch = (searchTerm: string = '') => {
     setIsLoading(true);
-    setIsDetailsOpen(false);
+    closeDetails;
 
     DataService.getAll(searchTerm)
       .then((response) => {
@@ -66,7 +67,7 @@ const Main = () => {
 
   const handlePage = (url: string) => {
     setIsLoading(true);
-    setIsDetailsOpen(false);
+    closeDetails;
     setSearchResults([]);
     navigate(`/?search=&page=${url.slice(-1)}`);
     DataService.getByPage(url)
