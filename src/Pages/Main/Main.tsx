@@ -25,21 +25,17 @@ const Main = () => {
     setTotalPages,
     openDetails,
     closeDetails,
+    searchTerm,
   } = useAppContext();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     navigate('/');
-    const storedValue = getStoredSearchTerm();
-
-    if (storedValue || storedValue === '') {
-      handleSearch(storedValue);
+    if (searchTerm || searchTerm === '') {
+      handleSearch(searchTerm);
     }
   }, []);
-
-  const getStoredSearchTerm = (): string | null =>
-    localStorage.getItem('searchTerm');
 
   const handleSearch = (searchTerm: string = '') => {
     setIsLoading(true);

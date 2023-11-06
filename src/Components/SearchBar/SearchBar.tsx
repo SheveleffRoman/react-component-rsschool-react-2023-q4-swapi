@@ -14,20 +14,6 @@ const SearchBar: FC<Props> = () => {
     localStorage.setItem('searchTerm', value);
   };
 
-  // const getStoredSearchTerm = (): string | null =>
-  //   localStorage.getItem('searchTerm');
-
-  // const [storedSearch, setStoredSearch] = useState(getStoredSearchTerm() || '');
-
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setStoredSearch(event.target.value);
-  // };
-
-  // const searchClick = () => {
-  //   localStorage.setItem('searchTerm', storedSearch.trim());
-  //   onSearch(storedSearch);
-  // };
-
   return (
     <>
       <div className="search-panel">
