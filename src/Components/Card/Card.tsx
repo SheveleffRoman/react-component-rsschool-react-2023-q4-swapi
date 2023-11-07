@@ -19,7 +19,7 @@ const Card: React.FC<CardProps> = ({ data, onClick }) => {
   const lastPart = parts[parts.length - 2];
   return (
     <Link to={`details/${lastPart}`}>
-      <div className="card" onClick={onClick}>
+      <div className="card" role="planet-card" onClick={onClick}>
         <h2 className="card-title">{data.name}</h2>
         <p>Climate: {data.climate}</p>
         <p>Diameter: {data.diameter}</p>

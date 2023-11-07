@@ -102,7 +102,7 @@ const Main = () => {
 
   return (
     <>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar />
       {isLoading ? (
         <Loader />
       ) : (

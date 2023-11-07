@@ -1,12 +1,7 @@
-import { FC } from 'react';
 import ErrorButton from '../Error/ErrorButton';
 import { useAppContext } from '../../context/appContext.ts';
 
-interface Props {
-  onSearch: (value: string) => void;
-}
-
-const SearchBar: FC<Props> = () => {
+const SearchBar = () => {
   const { searchTerm, setSearchTerm } = useAppContext();
 
   const handleSearch = (value: string) => {
