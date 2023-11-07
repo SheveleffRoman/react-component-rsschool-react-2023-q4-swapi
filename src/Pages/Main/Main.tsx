@@ -109,29 +109,33 @@ const Main = () => {
         <>
           <div className="results-container">
             <div className="search-results" onClick={closeDetails}>
-              {cardComponents}
+              {searchResults.length ? cardComponents : <h1>Not found</h1>}
             </div>
             <Outlet context={{ closeDetails }} />
           </div>
-          <div className="pagination">
-            <button
-              type="button"
-              onClick={() => handlePage(prevPage)}
-              disabled={prevPage === null}
-            >
-              Prev
-            </button>
-            <button disabled>
-              {currentPage}/{totalPages}
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePage(nextPage)}
-              disabled={nextPage === null}
-            >
-              Next
-            </button>
-          </div>
+          {searchResults.length ? (
+            <div className="pagination">
+              <button
+                type="button"
+                onClick={() => handlePage(prevPage)}
+                disabled={prevPage === null}
+              >
+                Prev
+              </button>
+              <button disabled>
+                {currentPage}/{totalPages}
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePage(nextPage)}
+                disabled={nextPage === null}
+              >
+                Next
+              </button>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       )}
     </>
