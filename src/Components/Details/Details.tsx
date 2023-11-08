@@ -59,7 +59,7 @@ const Details = () => {
   }, []);
 
   return (
-    <div className="details">
+    <div className="details" role="details-card">
       {loading ? (
         <h1>Loading...</h1>
       ) : (
