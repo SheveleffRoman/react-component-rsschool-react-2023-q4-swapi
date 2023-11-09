@@ -9,16 +9,22 @@ const SearchBar = () => {
     localStorage.setItem('searchTerm', value);
   };
 
+  const handleClick = () => {
+    localStorage.setItem('searchTerm', searchTerm);
+  };
+
   return (
     <>
       <div className="search-panel">
         <form className="search-form">
           <input
+            role="search"
             type="search"
             placeholder="Search"
             name="search"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
+            onClick={handleClick}
           />
           <button>Search planets</button>
         </form>
