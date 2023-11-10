@@ -6,6 +6,7 @@ import Card from '../../Components/Card/Card';
 import Loader from '../../Components/Loader/Loader';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/appContext.ts';
+import { usePageHandler } from './usePageHandler';
 
 const Main = () => {
   const {
@@ -20,7 +21,6 @@ const Main = () => {
     prevPage,
     setPrevPage,
     currentPage,
-    setCurrentPage,
     totalPages,
     setTotalPages,
     openDetails,
@@ -67,30 +67,32 @@ const Main = () => {
       });
   };
 
-  const handlePage = (url: string) => {
-    setIsLoading(true);
-    closeDetails;
-    setSearchResults([]);
-    navigate(`/?search=&page=${url.slice(-1)}`);
-    DataService.getByPage(url)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        setNextPage(data.next);
-        setPrevPage(data.previous);
-        setSearchResults(data.results);
-        setCurrentPage(url.slice(-1));
-      })
-      .catch((error) => {
-        setSearchResults([]);
-        setNextPage('');
-        setPrevPage('');
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const handlePage = usePageHandler();
+
+  // const handlePage = (url: string) => {
+  //   setIsLoading(true);
+  //   closeDetails;
+  //   setSearchResults([]);
+  //   navigate(`/?search=&page=${url.slice(-1)}`);
+  //   DataService.getByPage(url)
+  //     .then((response) => {
+  //       const data = response.data;
+  //       console.log(data);
+  //       setNextPage(data.next);
+  //       setPrevPage(data.previous);
+  //       setSearchResults(data.results);
+  //       setCurrentPage(url.slice(-1));
+  //     })
+  //     .catch((error) => {
+  //       setSearchResults([]);
+  //       setNextPage('');
+  //       setPrevPage('');
+  //       setError(error);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
 
   if (error) {
     throw new Error('API ERROR', error);

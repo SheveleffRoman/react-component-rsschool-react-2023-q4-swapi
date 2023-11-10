@@ -11,7 +11,11 @@ const ErrorButton = () => {
     throw new Error('Fake error');
   }
 
-  return <button onClick={handleClick}>Fake error</button>;
+  return (
+    <button role="fake-error" onClick={handleClick}>
+      Fake error
+    </button>
+  );
 };
 
 export default ErrorButton;

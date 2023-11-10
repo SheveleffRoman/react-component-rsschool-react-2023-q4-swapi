@@ -45,6 +45,4 @@ describe('Card', () => {
 
     expect(screen.getByRole('planet-card')).toHaveTextContent(mockData.climate);
   });
-
-  // add more expects for other data
 });

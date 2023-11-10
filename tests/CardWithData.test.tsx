@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { AppProvider } from '../src/context/AppProvider';
 import { MemoryRouter } from 'react-router-dom';
 import Main from '../src/Pages/Main/Main';
 import '@testing-library/jest-dom';
+import { usePageHandler } from '../src/Pages/Main/usePageHandler';
 
 vi.mock('../src/context/appContext.ts', async () => {
   const actual = (await vi.importActual(
@@ -59,5 +60,45 @@ describe('Main', () => {
     );
     const cards = screen.getAllByRole('planet-card');
     expect(cards).toHaveLength(3);
+  });
+});
+
+vi.mock('../src/Pages/Main/usePageHandler.ts', async () => {
+  const actual = (await vi.importActual(
+    '../src/Pages/Main/usePageHandler.ts'
+  )) as object;
+  return {
+    ...actual,
+    usePageHandler: vi.fn().mockImplementation,
+  };
+});
+
+describe('Pagination', () => {
+  it('Click to next page', async () => {
+    render(
+      <MemoryRouter>
+        <AppProvider>
+          <Main />
+        </AppProvider>
+      </MemoryRouter>
+    );
+
+    const nextBtn = screen.findByText('Next');
+    fireEvent.click(await nextBtn);
+    expect(usePageHandler).toHaveBeenCalled;
+  });
+
+  it('Click to next page', async () => {
+    render(
+      <MemoryRouter>
+        <AppProvider>
+          <Main />
+        </AppProvider>
+      </MemoryRouter>
+    );
+
+    const prevBtn = screen.findByText('Prev');
+    fireEvent.click(await prevBtn);
+    expect(usePageHandler).toHaveBeenCalled;
   });
 });

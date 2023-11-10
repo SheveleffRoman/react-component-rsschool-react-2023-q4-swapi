@@ -49,6 +49,9 @@ const Details = () => {
         setError('Error fetching resident data');
         console.error('Error fetching resident data:', error);
         setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
       });
     setError('');
   };
