@@ -52,8 +52,6 @@ vi.mock('react-router-dom', () => ({
 it('Details component renders and fetches data', async () => {
   const { queryByText } = render(<Details />);
 
-  screen.debug();
-
   // expect(getByRole('details-card')).toBeInTheDocument();
   expect(queryByText('Loading...')).toBeInTheDocument();
 

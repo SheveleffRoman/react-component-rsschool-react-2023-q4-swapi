@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { AppProvider } from '../src/context/AppProvider';
 import { MemoryRouter } from 'react-router-dom';
 import Main from '../src/Pages/Main/Main';
@@ -51,6 +51,7 @@ describe('Pagination', () => {
     const nextBtn = screen.getByRole('button', {
       name: /next/i,
     });
-    screen.debug(nextBtn);
+
+    expect(nextBtn);
   });
 });
