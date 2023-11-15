@@ -10,7 +10,7 @@ interface IPlanets {
 
 export interface IParams {
   searchValue: string | null;
-  page: string;
+  page: string | null;
 }
 
 export const planetAPI = createApi({

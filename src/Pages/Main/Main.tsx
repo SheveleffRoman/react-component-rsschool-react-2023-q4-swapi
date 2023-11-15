@@ -1,145 +1,106 @@
-import { useEffect } from 'react';
-import DataService from '../../API/DataService';
-import { Planet } from '../../App';
+import { useEffect, useState } from 'react';
 import SearchBar from '../../Components/SearchBar/SearchBar';
 import Card from '../../Components/Card/Card';
 import Loader from '../../Components/Loader/Loader';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/appContext.ts';
-import { usePageHandler } from './usePageHandler';
+import { useAppDispatch, useAppSelector } from '../../Components/hooks/redux';
+import { IParams, planetAPI } from '../../services/PlanetService';
+import { resultsSlice } from '../../store/reducers/ResultsSlice';
 
 const Main = () => {
-  const {
-    searchResults,
-    setSearchResults,
-    error,
-    setError,
-    isLoading,
-    setIsLoading,
-    nextPage,
-    setNextPage,
-    prevPage,
-    setPrevPage,
-    currentPage,
-    totalPages,
-    setTotalPages,
-    openDetails,
-    closeDetails,
-    searchTerm,
-  } = useAppContext();
+  const [nextPage, setNextPage] = useState<string>('');
+  const [prevPage, setPrevPage] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<string | null>('1');
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const { openDetails, closeDetails } = useAppContext();
+
+  const { searchValue } = useAppSelector((state) => state.searchReducer);
+  // const { results } = useAppSelector((state) => state.resultsSlice);
+  const { addResults } = resultsSlice.actions;
+  const dispatch = useAppDispatch();
+
+  const params: IParams = {
+    searchValue,
+    page: currentPage,
+  };
+
+  const { data, isLoading, isFetching } =
+    planetAPI.useFetchAllPlanetsQuery(params);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('/');
-    if (searchTerm || searchTerm === '') {
-      handleSearch(searchTerm);
+    navigate(`/?search=${searchValue}&page=${currentPage}`);
+    if (data) {
+      dispatch(addResults(data.results));
+      setTotalPages(Math.ceil(data.count / data.results.length));
+      setNextPage(data.next!);
+      setPrevPage(data.previous!);
     }
-  }, []);
+  }, [data, searchValue]);
 
-  const handleSearch = (searchTerm: string = '') => {
-    setIsLoading(true);
-    closeDetails;
-
-    if (searchTerm == '') {
-      navigate(``);
-    } else {
-      navigate(`/?search=${searchTerm}`);
+  const handleNextPage = (): void => {
+    if (data?.next) {
+      setCurrentPage(data.next.slice(-1));
     }
-
-    DataService.getAll(searchTerm)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        setSearchResults(data.results);
-        setNextPage(data.next);
-        setPrevPage(data.previous);
-        setTotalPages(Math.ceil(data.count / data.results.length));
-      })
-      .catch((error) => {
-        setSearchResults([]);
-        setNextPage('');
-        setPrevPage('');
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
   };
 
-  const handlePage = usePageHandler();
+  const handlePrevPage = (): void => {
+    if (data?.previous) {
+      setCurrentPage(data.previous.slice(-1));
+    }
+  };
 
-  // const handlePage = (url: string) => {
-  //   setIsLoading(true);
-  //   closeDetails;
-  //   setSearchResults([]);
-  //   navigate(`/?search=&page=${url.slice(-1)}`);
-  //   DataService.getByPage(url)
-  //     .then((response) => {
-  //       const data = response.data;
-  //       console.log(data);
-  //       setNextPage(data.next);
-  //       setPrevPage(data.previous);
-  //       setSearchResults(data.results);
-  //       setCurrentPage(url.slice(-1));
-  //     })
-  //     .catch((error) => {
-  //       setSearchResults([]);
-  //       setNextPage('');
-  //       setPrevPage('');
-  //       setError(error);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
-
-  if (error) {
-    throw new Error('API ERROR', error);
+  if (isLoading || isFetching) {
+    return (
+      <>
+        <SearchBar />
+        <Loader />
+      </>
+    );
   }
 
-  const cardComponents = searchResults.map((item: Planet) => (
-    <Card onClick={openDetails} key={item.name} data={item} />
-  ));
+  if (data?.count == 0) {
+    return (
+      <>
+        <SearchBar />
+        <h1>Not found!</h1>
+      </>
+    );
+  }
 
   return (
     <>
       <SearchBar />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <div className="results-container">
-            <div className="search-results" onClick={closeDetails}>
-              {searchResults.length ? cardComponents : <h1>Not found</h1>}
-            </div>
-            <Outlet context={{ closeDetails }} />
-          </div>
-          {searchResults.length ? (
-            <div className="pagination">
-              <button
-                type="button"
-                onClick={() => handlePage(prevPage)}
-                disabled={prevPage === null}
-              >
-                Prev
-              </button>
-              <button disabled>
-                {currentPage}/{totalPages}
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePage(nextPage)}
-                disabled={nextPage === null}
-              >
-                Next
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-        </>
-      )}
+      <div className="results-container">
+        <div className="search-results" onClick={closeDetails}>
+          {data?.results &&
+            data.results.map((planet) => (
+              <Card onClick={openDetails} key={planet.name} data={planet} />
+            ))}
+        </div>
+        <Outlet context={{ closeDetails }} />
+      </div>
+      <div className="pagination">
+        <button
+          type="button"
+          onClick={() => handlePrevPage()}
+          disabled={prevPage === null}
+        >
+          Prev
+        </button>
+        <button disabled>
+          {currentPage}/{totalPages}
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNextPage()}
+          disabled={nextPage === null}
+        >
+          Next
+        </button>
+      </div>
     </>
   );
 };
