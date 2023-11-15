@@ -1,16 +1,28 @@
 import ErrorButton from '../Error/ErrorButton';
-import { useAppContext } from '../../context/appContext.ts';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { searchSlice } from '../../store/reducers/SearchSlice';
+import { useEffect, useState } from 'react';
 
 const SearchBar = () => {
-  const { searchTerm, setSearchTerm } = useAppContext();
+  const { searchValue } = useAppSelector((state) => state.searchReducer);
+  const { changeValue } = searchSlice.actions;
+  const dispatch = useAppDispatch();
+  const [searchText, setSearchText] = useState('');
 
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    localStorage.setItem('searchTerm', value);
+  useEffect(() => {
+    setSearchText(searchValue!);
+  }, []);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    localStorage.setItem('searchTerm', event.target.value);
+    setSearchText(event.target.value);
   };
 
-  const handleClick = () => {
-    localStorage.setItem('searchTerm', searchTerm);
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    dispatch(changeValue(searchText));
   };
 
   return (
@@ -22,11 +34,12 @@ const SearchBar = () => {
             type="search"
             placeholder="Search"
             name="search"
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            onClick={handleClick}
+            value={searchText}
+            onChange={(e) => handleInputChange(e)}
           />
-          <button>Search planets</button>
+          <button type="submit" onClick={(e) => handleClick(e)}>
+            Search planets
+          </button>
         </form>
         <ErrorButton />
       </div>
