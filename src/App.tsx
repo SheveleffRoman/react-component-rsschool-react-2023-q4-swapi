@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import ErrorBoundary from './Components/Error/ErrorBoundary';
-import { AppProvider } from './context/AppProvider';
 import { Provider } from 'react-redux';
 import { setupStore } from './store/store';
 
@@ -32,9 +31,7 @@ const App = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <div className="wrapper_content">
-          <AppProvider>
-            <Outlet />
-          </AppProvider>
+          <Outlet />
         </div>
       </Provider>
     </ErrorBoundary>
