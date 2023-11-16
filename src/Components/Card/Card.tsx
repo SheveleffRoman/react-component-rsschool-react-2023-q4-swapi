@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useDetails } from '../hooks/details';
 
 interface CardProps {
   data: {
@@ -11,15 +12,17 @@ interface CardProps {
     surface_water: string;
     url: string;
   };
-  onClick: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ data, onClick }) => {
+const Card: React.FC<CardProps> = ({ data }) => {
   const parts = data.url.split('/');
   const lastPart = parts[parts.length - 2];
+
+  const { open } = useDetails();
+
   return (
     <Link to={`details/${lastPart}`}>
-      <div className="card" role="planet-card" onClick={onClick}>
+      <div className="card" role="planet-card" onClick={open}>
         <h2 className="card-title">{data.name}</h2>
         <p>Climate: {data.climate}</p>
         <p>Diameter: {data.diameter}</p>

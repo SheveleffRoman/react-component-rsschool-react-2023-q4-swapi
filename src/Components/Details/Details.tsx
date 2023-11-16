@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { planetAPI } from '../../services/PlanetService';
-
-interface Props {
-  closeDetails: () => void;
-}
+import { useDetails } from '../hooks/details';
 
 const Details = () => {
   const { id } = useParams();
@@ -16,7 +13,7 @@ const Details = () => {
     error,
   } = planetAPI.useFetchPlanetInfoQuery(id);
 
-  const { closeDetails }: Props = useOutletContext();
+  const { close } = useDetails();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,7 +50,7 @@ const Details = () => {
           {planetData.films.length == 1 ? 'film' : 'films'}
         </h2>
       )}
-      <button type="button" onClick={closeDetails}>
+      <button type="button" onClick={close}>
         back
       </button>
     </div>

@@ -3,20 +3,20 @@ import SearchBar from '../../Components/SearchBar/SearchBar';
 import Card from '../../Components/Card/Card';
 import Loader from '../../Components/Loader/Loader';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useAppContext } from '../../context/appContext.ts';
 import { useAppDispatch, useAppSelector } from '../../Components/hooks/redux';
 import { IParams, planetAPI } from '../../services/PlanetService';
 import { resultsSlice } from '../../store/reducers/ResultsSlice';
+import { useDetails } from '../../Components/hooks/details';
 
 const Main = () => {
   const [nextPage, setNextPage] = useState<string>('');
   const [prevPage, setPrevPage] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<string | null>('1');
   const [totalPages, setTotalPages] = useState<number>(0);
-  const { openDetails, closeDetails } = useAppContext();
 
   const { searchValue } = useAppSelector((state) => state.searchReducer);
   const { addResults, saveItemsPerPage } = resultsSlice.actions;
+
   const dispatch = useAppDispatch();
 
   const params: IParams = {
@@ -52,6 +52,8 @@ const Main = () => {
     }
   };
 
+  const { close } = useDetails();
+
   if (isLoading || isFetching) {
     return (
       <>
@@ -83,13 +85,13 @@ const Main = () => {
     <>
       <SearchBar />
       <div className="results-container">
-        <div className="search-results" onClick={closeDetails}>
+        <div className="search-results" onClick={close}>
           {data?.results &&
             data.results.map((planet) => (
-              <Card onClick={openDetails} key={planet.name} data={planet} />
+              <Card key={planet.name} data={planet} />
             ))}
         </div>
-        <Outlet context={{ closeDetails }} />
+        <Outlet />
       </div>
       <div className="pagination">
         <button
