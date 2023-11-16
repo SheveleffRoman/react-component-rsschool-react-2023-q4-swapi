@@ -18,7 +18,7 @@ export const useDetails = () => {
   const close = () => {
     if (isDetailsOpen) {
       dispatch(changeDetails(false));
-      navigator(-1);
+      navigator('/');
     }
   };
 
