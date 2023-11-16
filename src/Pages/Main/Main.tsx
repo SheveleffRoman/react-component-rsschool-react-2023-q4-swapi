@@ -24,7 +24,7 @@ const Main = () => {
     page: currentPage,
   };
 
-  const { data, isLoading, isFetching } =
+  const { data, error, isLoading, isFetching } =
     planetAPI.useFetchAllPlanetsQuery(params);
 
   const navigate = useNavigate();
@@ -66,6 +66,15 @@ const Main = () => {
       <>
         <SearchBar />
         <h1>Not found!</h1>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <SearchBar />
+        <h1>Loading data error</h1>
       </>
     );
   }
