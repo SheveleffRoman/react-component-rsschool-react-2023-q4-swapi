@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const baseURL = 'https://swapi.dev/api/planets/';
-// const residentsURL = 'https://swapi.dev/api/people/';
 
 export default class DataService {
   static async getAll(search: string) {
