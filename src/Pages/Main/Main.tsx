@@ -16,8 +16,7 @@ const Main = () => {
   const { openDetails, closeDetails } = useAppContext();
 
   const { searchValue } = useAppSelector((state) => state.searchReducer);
-  // const { results } = useAppSelector((state) => state.resultsSlice);
-  const { addResults } = resultsSlice.actions;
+  const { addResults, saveItemsPerPage } = resultsSlice.actions;
   const dispatch = useAppDispatch();
 
   const params: IParams = {
@@ -34,6 +33,7 @@ const Main = () => {
     navigate(`/?search=${searchValue}&page=${currentPage}`);
     if (data) {
       dispatch(addResults(data.results));
+      dispatch(saveItemsPerPage(data.results.length));
       setTotalPages(Math.ceil(data.count / data.results.length));
       setNextPage(data.next!);
       setPrevPage(data.previous!);
