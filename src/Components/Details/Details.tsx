@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
-import DataService from '../../API/DataService';
-
-interface Resident {
-  name: string;
-}
+import { planetAPI } from '../../services/PlanetService';
 
 interface Props {
   closeDetails: () => void;
@@ -13,75 +9,53 @@ interface Props {
 const Details = () => {
   const { id } = useParams();
 
-  const [planet, setPlanet] = useState({ name: '', residents: [] });
-  const [residentsData, setResidentsData] = useState<Resident[]>([]);
-  const [error, setError] = useState('Error');
-  const [loading, setLoading] = useState(false);
+  const {
+    data: planetData,
+    isLoading: planetIsLoading,
+    isFetching: planetIsFetching,
+    error,
+  } = planetAPI.useFetchPlanetInfoQuery(id);
 
   const { closeDetails }: Props = useOutletContext();
 
-  const peopleDetails = (id: string) => {
-    setLoading(true);
-    DataService.getById(id)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        setPlanet(data);
-        return fetchResidentsData(data.residents);
-      })
-      .catch((error) => {
-        console.error('Произошла ошибка:', error);
-      });
-  };
-
-  const fetchResidentsData = (residents: string[]) => {
-    const residentPromises = residents.map((resident) => {
-      return DataService.getResidentsByUrl(resident);
-    });
-
-    Promise.all(residentPromises)
-      .then((responses) => {
-        const residentsInfo = responses.map((response) => response.data);
-        setResidentsData(residentsInfo);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Error fetching resident data');
-        console.error('Error fetching resident data:', error);
-        setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    setError('');
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    peopleDetails(id!);
   }, []);
+
+  if (planetIsLoading || planetIsFetching) {
+    return (
+      <>
+        <h1>Loading data...</h1>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <h1>Loading data error</h1>
+      </>
+    );
+  }
 
   return (
     <div className="details" role="details-card">
-      {loading ? (
-        <h1>Loading...</h1>
-      ) : (
-        <>
-          <h1>Popular citizens of {planet.name}</h1>
-          <ul>
-            {residentsData.length === 0 ? (
-              <h1>Not found</h1>
-            ) : (
-              residentsData.map((resident: Resident) => (
-                <li key={resident.name}>{resident.name}</li>
-              ))
-            )}
-          </ul>
-          <button type="button" onClick={closeDetails}>
-            back
-          </button>
-        </>
+      <h1>Stat facts about planet {planetData?.name}</h1>
+      {planetData && (
+        <h2>
+          Number of famous movie characters from this planet:{' '}
+          {planetData.residents.length}
+        </h2>
       )}
+      {planetData && (
+        <h2>
+          The planet appeared in {planetData.films.length}{' '}
+          {planetData.films.length == 1 ? 'film' : 'films'}
+        </h2>
+      )}
+      <button type="button" onClick={closeDetails}>
+        back
+      </button>
     </div>
   );
 };
