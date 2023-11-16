@@ -8,6 +8,12 @@ interface IPlanets {
   results: Planet[];
 }
 
+interface IPlanetInfo {
+  name: string;
+  residents: string[];
+  films: string[];
+}
+
 export interface IParams {
   searchValue: string | null;
   page: string | null;
@@ -24,6 +30,11 @@ export const planetAPI = createApi({
           search: param.searchValue,
           page: param.page,
         },
+      }),
+    }),
+    fetchPlanetInfo: build.query<IPlanetInfo, string | undefined>({
+      query: (id) => ({
+        url: `/planets/${id}`,
       }),
     }),
   }),
