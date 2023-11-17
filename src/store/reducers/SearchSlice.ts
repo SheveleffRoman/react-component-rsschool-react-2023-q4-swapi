@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface SearchState {
-  searchValue: string | null;
+  searchValue: string | undefined;
 }
 
 const initialState: SearchState = {
-  searchValue: localStorage.getItem('searchTerm'),
+  searchValue: localStorage.getItem('searchTerm') || '',
 };
 
 export const searchSlice = createSlice({

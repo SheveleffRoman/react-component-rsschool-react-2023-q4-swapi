@@ -15,7 +15,7 @@ interface IPlanetInfo {
 }
 
 export interface IParams {
-  searchValue: string | null;
+  searchValue: string | undefined;
   page: string | null;
 }
 
