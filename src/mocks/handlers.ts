@@ -1,6 +1,5 @@
 import { HttpResponse, http } from 'msw';
 
-// Mock Data
 export const fakePlanets = {
   count: 60,
   next: 'https://swapi.dev/api/planets/?search=&page=2',
