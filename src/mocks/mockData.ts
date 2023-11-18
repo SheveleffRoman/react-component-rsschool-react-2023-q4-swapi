@@ -1,9 +1,7 @@
-import { HttpResponse, http } from 'msw';
-
 export const fakePlanets = {
   count: 60,
   next: 'https://swapi.dev/api/planets/?search=&page=2',
-  previous: null,
+  previous: 'https://swapi.dev/api/planets/?search=&page=0',
   results: [
     {
       name: 'Tatooine',
@@ -41,8 +39,9 @@ export const fakePlanets = {
   ],
 };
 
-export const handlers = [
-  http.get('https://swapi.dev/api/planets', () => {
-    return HttpResponse.json(fakePlanets, { status: 200 });
-  }),
-];
+export const fakePlanetsWithoutData = {
+  count: 0,
+  next: 'https://swapi.dev/api/planets/?search=&page=2',
+  previous: null,
+  results: [],
+};
