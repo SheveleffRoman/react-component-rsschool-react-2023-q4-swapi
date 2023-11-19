@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Card from '../src/Components/Card/Card';
 import '@testing-library/jest-dom';
+import { Provider } from 'react-redux';
+import { setupStore } from '../src/store/store';
+
+const store = setupStore();
 
 const mockData = {
   name: 'Tatooine',
@@ -19,30 +23,39 @@ describe('Card', () => {
   it('renders planet name', () => {
     render(
       <MemoryRouter>
-        <Card
-          data={mockData}
-          onClick={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <Provider store={store}>
+          <Card data={mockData} />
+        </Provider>
       </MemoryRouter>
     );
-
     expect(screen.getByRole('planet-card')).toHaveTextContent(mockData.name);
   });
 
   it('renders planet climate', () => {
     render(
       <MemoryRouter>
-        <Card
-          data={mockData}
-          onClick={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <Provider store={store}>
+          <Card data={mockData} />
+        </Provider>
       </MemoryRouter>
     );
 
     expect(screen.getByRole('planet-card')).toHaveTextContent(mockData.climate);
+  });
+
+  it('renders the correct number of <p> elements', () => {
+    render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Card data={mockData} />
+        </Provider>
+      </MemoryRouter>
+    );
+
+    const paragraphs = screen
+      .getAllByRole('planet-card')[0]
+      .querySelectorAll('p');
+
+    expect(paragraphs.length).toBe(6);
   });
 });

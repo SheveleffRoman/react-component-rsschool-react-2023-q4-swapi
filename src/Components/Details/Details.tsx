@@ -30,7 +30,7 @@ const Details = () => {
   if (error) {
     return (
       <>
-        <h1>Loading data error</h1>
+        <h1 role="error-data">Loading data error</h1>
       </>
     );
   }

@@ -15,7 +15,7 @@ import { setupServer } from 'msw/node';
 
 const handlers = [
   http.get('https://swapi.dev/api/planets/:id', () => {
-    return HttpResponse.json(fakeDetailsPlanet, { status: 200 });
+    return HttpResponse.json(fakeDetailsPlanet, { status: 400 });
   }),
 ];
 
@@ -50,7 +50,7 @@ const setupStore = () => {
 const store = setupStore();
 
 describe('Details', () => {
-  it('Check that a loading indicator is displayed while fetching data', async () => {
+  it('Check error data message', async () => {
     render(
       <MemoryRouter initialEntries={['/details/1']}>
         <Provider store={store}>
@@ -59,19 +59,13 @@ describe('Details', () => {
       </MemoryRouter>
     );
 
-    const heading = screen.getByRole('heading', { name: /loading/i });
-    expect(heading).toBeInTheDocument();
-
     await waitFor(() => {
       expect(
-        screen.queryByRole('heading', { name: /loading/i })
+        screen.queryByRole('heading', { name: /Loading data.../i })
       ).not.toBeInTheDocument();
     });
-
-    expect(
-      screen.getByText(
-        /Number of famous movie characters from this planet: 10/i
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByRole('error-data')).toHaveTextContent(
+      /Loading data error/i
+    );
   });
 });

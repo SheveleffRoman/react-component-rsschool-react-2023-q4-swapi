@@ -101,7 +101,7 @@ const Main = () => {
         >
           Prev
         </button>
-        <button disabled>
+        <button role="pages" disabled>
           {currentPage}/{totalPages}
         </button>
         <button
