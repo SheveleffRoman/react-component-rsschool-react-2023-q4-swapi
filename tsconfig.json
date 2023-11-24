@@ -18,7 +18,15 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["src", "tests"],
+  "include": [
+    "src",
+    "tests",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/**/*.ts",
+    "**/**/*.tsx"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
