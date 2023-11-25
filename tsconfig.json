@@ -25,7 +25,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/**/*.ts",
-    "**/**/*.tsx"
+    "**/**/*.tsx",
+    "next.config.js"
   ],
   "references": [
     {
