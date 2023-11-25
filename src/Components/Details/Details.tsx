@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useDetails } from '../hooks/details';
 import { planetAPI } from '../../services/PlanetService';
+import Main from '../Main/Main';
 
 const Details = () => {
   const router = useRouter();
@@ -43,24 +44,26 @@ const Details = () => {
   }
 
   return (
-    <div className="details" role="details-card">
-      <h1>Stat facts about planet {planetData?.name}</h1>
-      {planetData && (
-        <h2>
-          Number of famous movie characters from this planet:{' '}
-          {planetData.residents.length}
-        </h2>
-      )}
-      {planetData && (
-        <h2>
-          The planet appeared in {planetData.films.length}{' '}
-          {planetData.films.length == 1 ? 'film' : 'films'}
-        </h2>
-      )}
-      <button type="button" onClick={close}>
-        back
-      </button>
-    </div>
+    <Main>
+      <div className="details" role="details-card">
+        <h1>Stat facts about planet {planetData?.name}</h1>
+        {planetData && (
+          <h2>
+            Number of famous movie characters from this planet:{' '}
+            {planetData.residents.length}
+          </h2>
+        )}
+        {planetData && (
+          <h2>
+            The planet appeared in {planetData.films.length}{' '}
+            {planetData.films.length == 1 ? 'film' : 'films'}
+          </h2>
+        )}
+        <button type="button" onClick={close}>
+          back
+        </button>
+      </div>
+    </Main>
   );
 };
 

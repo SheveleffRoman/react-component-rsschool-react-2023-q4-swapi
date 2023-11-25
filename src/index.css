@@ -214,3 +214,7 @@ input {
   display: flex;
   gap: 1rem;
 }
+
+.card-disabled {
+  pointer-events: none;
+}

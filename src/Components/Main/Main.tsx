@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { IParams, planetAPI } from '../../services/PlanetService';
 import { resultsSlice } from '../../store/reducers/ResultsSlice';
 import Card from '../Card/Card';
@@ -7,7 +7,7 @@ import { useDetails } from '../hooks/details';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import SearchBar from '../SearchBar/SearchBar';
 
-const Main = () => {
+const Main = ({ children }: { children: ReactElement }) => {
   const { searchValue } = useAppSelector((state) => state.searchReducer);
   const { currentPage, totalPages } = useAppSelector(
     (state) => state.resultsSlice
@@ -80,6 +80,7 @@ const Main = () => {
                 <Card key={planet.name} data={planet} />
               ))}
           </div>
+          {children}
         </div>
         <div className="pagination">
           <button

@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Planet } from '../App';
 import { HYDRATE } from 'next-redux-wrapper';
 
 interface IPlanets {
@@ -7,6 +6,17 @@ interface IPlanets {
   next: string | null;
   previous: string | null;
   results: Planet[];
+}
+
+interface Planet {
+  name: string;
+  climate: string;
+  diameter: string;
+  rotation_period: string;
+  population: string;
+  terrain: string;
+  surface_water: string;
+  url: string;
 }
 
 interface IPlanetInfo {
