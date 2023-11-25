@@ -5,7 +5,7 @@ interface SearchState {
 }
 
 const initialState: SearchState = {
-  searchValue: localStorage.getItem('searchTerm') || '',
+  searchValue: '',
 };
 
 export const searchSlice = createSlice({

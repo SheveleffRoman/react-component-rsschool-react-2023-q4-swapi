@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Planet } from '../App';
+import { HYDRATE } from 'next-redux-wrapper';
 
 interface IPlanets {
   count: number;
@@ -22,6 +23,11 @@ export interface IParams {
 export const planetAPI = createApi({
   reducerPath: 'planetAPI',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api' }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   endpoints: (build) => ({
     fetchAllPlanets: build.query<IPlanets, IParams>({
       query: (param: IParams) => ({
