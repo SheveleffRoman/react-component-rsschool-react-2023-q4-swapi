@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useDetails } from '../hooks/details';
 
 interface CardProps {
@@ -21,7 +21,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
   const { open } = useDetails();
 
   return (
-    <Link to={`details/${lastPart}`}>
+    <Link href={`/details/${lastPart}`}>
       <div className="card" role="planet-card" onClick={open}>
         <h2 className="card-title">{data.name}</h2>
         <p>Climate: {data.climate}</p>

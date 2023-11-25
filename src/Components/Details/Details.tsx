@@ -1,17 +1,24 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { planetAPI } from '../../services/PlanetService';
+import { useRouter } from 'next/router';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useDetails } from '../hooks/details';
+import { planetAPI } from '../../services/PlanetService';
 
 const Details = () => {
-  const { id } = useParams();
+  const router = useRouter();
+  const id = router.query.id;
 
   const {
     data: planetData,
     isLoading: planetIsLoading,
     isFetching: planetIsFetching,
     error,
-  } = planetAPI.useFetchPlanetInfoQuery(id);
+  } = planetAPI.useFetchPlanetInfoQuery(
+    typeof id === 'string' ? id : skipToken,
+    {
+      skip: router.isFallback,
+    }
+  );
 
   const { close } = useDetails();
 
