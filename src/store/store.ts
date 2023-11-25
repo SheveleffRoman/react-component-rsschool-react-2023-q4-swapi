@@ -3,6 +3,7 @@ import searchReducer from './reducers/SearchSlice';
 import resultsSlice from './reducers/ResultsSlice';
 import detailsSlice from './reducers/DetailsSlice';
 import { planetAPI } from '../services/PlanetService';
+import { createWrapper } from 'next-redux-wrapper';
 
 const rootReducer = combineReducers({
   searchReducer,
@@ -22,3 +23,5 @@ export const setupStore = () => {
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = AppStore['dispatch'];
+
+export const wrapper = createWrapper<AppStore>(setupStore, { debug: true });
