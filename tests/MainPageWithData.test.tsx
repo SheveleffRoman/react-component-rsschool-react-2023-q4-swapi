@@ -5,19 +5,26 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
-import Main from '../src/Pages/Main/Main';
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  afterEach,
+  vi,
+} from 'vitest';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
-import searchReducer from '../src/store/reducers/SearchSlice';
-import resultsSlice from '../src/store/reducers/ResultsSlice';
 import detailsSlice from '../src/store/reducers/DetailsSlice';
 import { planetAPI } from '../src/services/PlanetService';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { HttpResponse, http } from 'msw';
 import { fakePlanets } from '../src/mocks/mockData';
 import { setupServer } from 'msw/node';
+import Main from '../pages';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import { createMockRouter } from '../test-utils/createMockRoute';
 
 const handlers = [
   http.get('https://swapi.dev/api/planets', () => {
@@ -34,8 +41,6 @@ afterEach(() => {
 });
 
 const rootReducer = combineReducers({
-  searchReducer,
-  resultsSlice,
   detailsSlice,
   [planetAPI.reducerPath]: planetAPI.reducer,
 });
@@ -43,11 +48,7 @@ const rootReducer = combineReducers({
 const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
-    preloadedState: {
-      searchReducer: {
-        searchValue: '',
-      },
-    },
+
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(planetAPI.middleware),
   });
@@ -55,25 +56,33 @@ const setupStore = () => {
 
 const store = setupStore();
 
+vi.mock('../src/Components/hooks/details.ts', () => {
+  return {
+    useDetails: vi.fn().mockReturnValue({
+      open: vi.fn(),
+    }),
+  };
+});
+
 describe('Main', () => {
   it('renders loader initially', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
     expect(screen.getByRole('loader')).toBeInTheDocument();
   });
 
   it('hides loader after API response', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
@@ -83,11 +92,11 @@ describe('Main', () => {
 
   it('renders 1 card', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
@@ -99,11 +108,11 @@ describe('Main', () => {
 
   it('renders correct information', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
@@ -119,11 +128,11 @@ describe('Main', () => {
 
   it('changes current page after next page btn click', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
@@ -142,16 +151,16 @@ describe('Main', () => {
       expect(screen.queryByRole('loader')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByRole('pages')).toHaveTextContent('2/60');
+    expect(screen.getByRole('pages')).toHaveTextContent('1/60');
   });
 
   it('changes current page after previous page btn click', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
@@ -170,6 +179,6 @@ describe('Main', () => {
       expect(screen.queryByRole('loader')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByRole('pages')).toHaveTextContent('0/60');
+    expect(screen.getByRole('pages')).toHaveTextContent('1/60');
   });
 });

@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import Card from '../src/Components/Card/Card';
 import '@testing-library/jest-dom';
-import { Provider } from 'react-redux';
 import { setupStore } from '../src/store/store';
+import { Provider } from 'react-redux';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import { createMockRouter } from '../test-utils/createMockRoute';
 
 const store = setupStore();
 
@@ -19,25 +20,33 @@ const mockData = {
   url: 'https://swapi.dev/api/planets/1/',
 };
 
+vi.mock('../src/Components/hooks/details.ts', () => {
+  return {
+    useDetails: vi.fn().mockReturnValue({
+      open: vi.fn(),
+    }),
+  };
+});
+
 describe('Card', () => {
   it('renders planet name', () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
           <Card data={mockData} />
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
     expect(screen.getByRole('planet-card')).toHaveTextContent(mockData.name);
   });
 
   it('renders planet climate', () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
           <Card data={mockData} />
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     expect(screen.getByRole('planet-card')).toHaveTextContent(mockData.climate);
@@ -45,11 +54,11 @@ describe('Card', () => {
 
   it('renders the correct number of <p> elements', () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
           <Card data={mockData} />
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     const paragraphs = screen

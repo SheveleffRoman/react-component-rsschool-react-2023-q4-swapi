@@ -1,17 +1,24 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  afterEach,
+  vi,
+} from 'vitest';
 import Details from '../src/Components/Details/Details';
 import '@testing-library/jest-dom';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import searchReducer from '../src/store/reducers/SearchSlice';
-import resultsSlice from '../src/store/reducers/ResultsSlice';
 import detailsSlice from '../src/store/reducers/DetailsSlice';
 import { planetAPI } from '../src/services/PlanetService';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { HttpResponse, http } from 'msw';
 import { fakeDetailsPlanet } from '../src/mocks/mockData';
 import { setupServer } from 'msw/node';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import { createMockRouter } from '../test-utils/createMockRoute';
 
 const handlers = [
   http.get('https://swapi.dev/api/planets/:id', () => {
@@ -28,8 +35,6 @@ afterEach(() => {
 });
 
 const rootReducer = combineReducers({
-  searchReducer,
-  resultsSlice,
   detailsSlice,
   [planetAPI.reducerPath]: planetAPI.reducer,
 });
@@ -37,11 +42,6 @@ const rootReducer = combineReducers({
 const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
-    preloadedState: {
-      searchReducer: {
-        searchValue: '',
-      },
-    },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(planetAPI.middleware),
   });
@@ -49,14 +49,24 @@ const setupStore = () => {
 
 const store = setupStore();
 
+vi.mock('../src/Components/hooks/details.ts', () => {
+  return {
+    useDetails: vi.fn().mockReturnValue({
+      open: vi.fn(),
+    }),
+  };
+});
+
 describe('Details', () => {
   it('Check error data message', async () => {
     render(
-      <MemoryRouter initialEntries={['/details/1']}>
+      <RouterContext.Provider
+        value={createMockRouter({ query: { id: 'xxx' } })}
+      >
         <Provider store={store}>
           <Details />
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {

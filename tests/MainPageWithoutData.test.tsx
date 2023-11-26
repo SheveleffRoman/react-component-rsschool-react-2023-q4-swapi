@@ -1,17 +1,24 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
-import Main from '../src/Pages/Main/Main';
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  afterEach,
+  vi,
+} from 'vitest';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
-import searchReducer from '../src/store/reducers/SearchSlice';
-import resultsSlice from '../src/store/reducers/ResultsSlice';
 import detailsSlice from '../src/store/reducers/DetailsSlice';
 import { planetAPI } from '../src/services/PlanetService';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { HttpResponse, http } from 'msw';
 import { fakePlanetsWithoutData } from '../src/mocks/mockData';
 import { setupServer } from 'msw/node';
+import Main from '../pages';
+import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
+import { createMockRouter } from '../test-utils/createMockRoute';
 
 const handlers = [
   http.get('https://swapi.dev/api/planets', () => {
@@ -28,8 +35,6 @@ afterEach(() => {
 });
 
 const rootReducer = combineReducers({
-  searchReducer,
-  resultsSlice,
   detailsSlice,
   [planetAPI.reducerPath]: planetAPI.reducer,
 });
@@ -37,11 +42,6 @@ const rootReducer = combineReducers({
 const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
-    preloadedState: {
-      searchReducer: {
-        searchValue: '',
-      },
-    },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(planetAPI.middleware),
   });
@@ -49,14 +49,22 @@ const setupStore = () => {
 
 const store = setupStore();
 
+vi.mock('../src/Components/hooks/details.ts', () => {
+  return {
+    useDetails: vi.fn().mockReturnValue({
+      open: vi.fn(),
+    }),
+  };
+});
+
 describe('Main', () => {
   it('renders not found', async () => {
     render(
-      <MemoryRouter>
+      <RouterContext.Provider value={createMockRouter({})}>
         <Provider store={store}>
-          <Main />
+          <Main>{undefined}</Main>
         </Provider>
-      </MemoryRouter>
+      </RouterContext.Provider>
     );
 
     await waitFor(() => {
