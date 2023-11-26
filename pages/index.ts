@@ -3,10 +3,9 @@ import { planetAPI } from '../src/services/PlanetService';
 import { wrapper } from '../src/store/store';
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { searchReducer, resultsSlice } = store.getState();
-    const searchValue = searchReducer.searchValue;
-    const page = resultsSlice.currentPage.toString();
+  (store) => async (context) => {
+    const searchValue = context.query.search || '';
+    const page = context.query.page || '1';
 
     store.dispatch(
       planetAPI.endpoints.fetchAllPlanets.initiate({

@@ -1,13 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import searchReducer from './reducers/SearchSlice';
-import resultsSlice from './reducers/ResultsSlice';
 import detailsSlice from './reducers/DetailsSlice';
 import { planetAPI } from '../services/PlanetService';
 import { createWrapper } from 'next-redux-wrapper';
 
 const rootReducer = combineReducers({
-  searchReducer,
-  resultsSlice,
   detailsSlice,
   [planetAPI.reducerPath]: planetAPI.reducer,
 });

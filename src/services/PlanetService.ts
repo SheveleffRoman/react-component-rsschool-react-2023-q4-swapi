@@ -26,8 +26,8 @@ interface IPlanetInfo {
 }
 
 export interface IParams {
-  searchValue: string | undefined;
-  page: string | null;
+  searchValue: string | string[];
+  page: string | string[];
 }
 
 export const planetAPI = createApi({

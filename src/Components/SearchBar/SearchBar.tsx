@@ -1,17 +1,10 @@
 import ErrorButton from '../Error/ErrorButton';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { searchSlice } from '../../store/reducers/SearchSlice';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const SearchBar = () => {
-  const { searchValue } = useAppSelector((state) => state.searchReducer);
-  const { changeValue } = searchSlice.actions;
-  const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState('');
-
-  useEffect(() => {
-    setSearchText(searchValue!);
-  }, []);
+  const router = useRouter();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('searchTerm', event.target.value);
@@ -22,7 +15,7 @@ const SearchBar = () => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    dispatch(changeValue(searchText));
+    router.push(`/?search=${searchText}`);
   };
 
   return (

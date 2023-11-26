@@ -1,47 +1,47 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement } from 'react';
 import { IParams, planetAPI } from '../../services/PlanetService';
-import { resultsSlice } from '../../store/reducers/ResultsSlice';
 import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import { useDetails } from '../hooks/details';
-import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import SearchBar from '../SearchBar/SearchBar';
+import { useRouter } from 'next/router';
 
-const Main = ({ children }: { children: ReactElement }) => {
-  const { searchValue } = useAppSelector((state) => state.searchReducer);
-  const { currentPage, totalPages } = useAppSelector(
-    (state) => state.resultsSlice
-  );
-  const { addResults, saveItemsPerPage, changePage, setTotalPages } =
-    resultsSlice.actions;
+const Main = ({ children }: { children: ReactElement | undefined }) => {
+  const router = useRouter();
 
-  const dispatch = useAppDispatch();
+  const currentPage = router.query.page || '1';
+
+  const searchValue = router.query.search || '';
+
+  const page = router.query.page || '1';
 
   const params: IParams = {
     searchValue,
-    page: currentPage.toString(),
+    page,
   };
 
   const { data, error, isLoading, isFetching } =
     planetAPI.useFetchAllPlanetsQuery(params);
 
-  useEffect(() => {
-    if (data) {
-      dispatch(addResults(data.results));
-      dispatch(saveItemsPerPage(data.results.length));
-      dispatch(setTotalPages(Math.ceil(data.count / data.results.length)));
-    }
-  }, [data]);
+  let totalPages = '0';
+
+  if (data) {
+    totalPages = Math.ceil(data!.count / data!.results.length).toString();
+  }
 
   const handleNextPage = (): void => {
     if (data?.next) {
-      dispatch(changePage(currentPage + 1));
+      const nextPage = data.next.slice(-1);
+      const query = `/?search=&page=${nextPage}`;
+      router.push(query);
     }
   };
 
   const handlePrevPage = (): void => {
     if (data?.previous) {
-      dispatch(changePage(currentPage - 1));
+      const prevPage = data.previous.slice(-1);
+      const query = `/?search=&page=${prevPage}`;
+      router.push(query);
     }
   };
 
