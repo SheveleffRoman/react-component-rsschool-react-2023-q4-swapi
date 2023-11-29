@@ -4,12 +4,12 @@ import '../../App.css';
 function Main() {
   return (
     <>
-      <div>Main Route</div>
+      <h1>Main Route </h1>
       <Link to={'/RHF'}>
         <button>to RHF</button>
       </Link>
       <Link to={'/uncontrolled'}>
-        <button>to unconrtolled</button>
+        <button>to uncontrolled</button>
       </Link>
     </>
   );
