@@ -5,6 +5,10 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { dataSlice } from '../../store/reducers/dataSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import YupPassword from 'yup-password';
+import { convertToBase64 } from '../converterBase64';
+
+YupPassword(yup);
 
 const schema = yup
   .object({
@@ -33,30 +37,35 @@ const schema = yup
       .positive()
       .required(),
     email: yup.string().email().required(),
-    password: yup
+    password: yup.string().password().required(),
+    confirmPassword: yup
       .string()
-      .required('Password is required')
-      .test('password-strength', ' Week password', (value) => {
-        if (!value) {
-          return false;
-        }
-
-        const hasNumber = /\d/.test(value);
-
-        const hasUppercase = /[A-Z]/.test(value);
-
-        const hasLowercase = /[a-z]/.test(value);
-
-        const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
-
-        return hasNumber && hasUppercase && hasLowercase && hasSpecialChar;
+      .oneOf([yup.ref('password'), undefined], 'Passwords must match')
+      .required('Password confirmation is required'),
+    gender: yup.string().required('Gender is required'),
+    terms: yup.boolean().oneOf([true], 'Agree is required').required(),
+    image: yup
+      .mixed<FileList>()
+      .required('File not found')
+      .test('fileExists', 'File not found', (files) => {
+        return !files || files.length != 0;
+      })
+      .test('fileFormat', 'Only JPG or PNG files are allowed', (files) => {
+        return Array.from(files).every(
+          (file) =>
+            file.name.toLowerCase().endsWith('.jpg') ||
+            file.name.toLowerCase().endsWith('.png')
+        );
+      })
+      .test('fileSize', 'Only documents up to 2MB are permitted', (files) => {
+        return Array.from(files).every((file) => file.size <= 2_000_000);
       }),
   })
   .required();
 
 function RHF() {
   const {} = useAppSelector((state) => state.dataSlice);
-  const { transferData } = dataSlice.actions;
+  const { setData } = dataSlice.actions;
   const dispatch = useAppDispatch();
 
   const {
@@ -64,27 +73,24 @@ function RHF() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    dispatch(transferData(data));
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const imageBase64 = await convertToBase64(data.image[0]);
+    console.log(imageBase64);
+    dispatch(
+      setData({
+        ...data,
+        image: imageBase64,
+      })
+    );
     console.log(data);
     reset();
   };
-
-  // useEffect(() => {
-  //   const subscription = watch((value, { name, type }) => {
-  //     console.log(value, name, type);
-  //     dispatch(transferData(value.name!));
-  //   });
-
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, [watch]);
 
   return (
     <>
@@ -97,13 +103,68 @@ function RHF() {
         <p>{errors.age?.message}</p>
         <input {...register('email')} placeholder="email@example.com" />
         <p>{errors.email?.message}</p>
-        <input type="" {...register('password')} />
+        <input
+          type="password"
+          {...register('password')}
+          placeholder="password"
+        />
         <p>{errors.password?.message}</p>
+        <input
+          type="password"
+          {...register('confirmPassword')}
+          placeholder="confirm password"
+        />
+        <p>{errors.confirmPassword?.message}</p>
+        <fieldset>
+          <legend>Select a gender:</legend>
+
+          <div>
+            <input
+              type="radio"
+              id="male"
+              value="male"
+              {...register('gender')}
+            />
+            <label htmlFor="male">Male</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="female"
+              value="female"
+              {...register('gender')}
+            />
+            <label htmlFor="female">Female</label>
+          </div>
+          <p>{errors.gender?.message}</p>
+        </fieldset>
+        <fieldset>
+          <legend>Terms & Conditions</legend>
+          <input type="checkbox" id="terms" {...register('terms')} />
+          <label htmlFor="terms">I agree to the Terms & Conditions </label>
+          <p>{errors.terms?.message}</p>
+        </fieldset>
+        <input type="file" {...register('image')} />
+        <p>{errors.image?.message}</p>
         <div>
           {' '}
           <button type="submit">Send form</button>
         </div>
       </form>
+      <button
+        onClick={() => {
+          setValue('name', 'Roman');
+          setValue('age', 26);
+          setValue('email', 'roman@yandex.ru');
+          setValue('gender', 'male');
+          setValue('terms', true);
+          setValue('password', 'Romanik16)');
+          setValue('confirmPassword', 'Romanik16)');
+        }}
+      >
+        Fill data
+      </button>
 
       <Link to={'/'}>
         <button>to main</button>

@@ -1,20 +1,22 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { FormData } from '../../app.interface';
+import { IStore } from '../../app.interface';
 
-const initialState: FormData = {
+const initialState: IStore = {
   name: '',
   age: 0,
   email: '',
   password: '',
-  // gender: '',
-  // terms: false,
+  confirmPassword: '',
+  gender: '',
+  terms: false,
+  image: '',
 };
 
 export const dataSlice = createSlice({
   name: 'data',
   initialState,
   reducers: {
-    transferData(_state, action: PayloadAction<FormData>) {
+    setData(_state, action: PayloadAction<IStore>) {
       return action.payload;
     },
   },
