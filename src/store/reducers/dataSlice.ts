@@ -10,6 +10,7 @@ const initialState: IStore = {
   gender: '',
   terms: false,
   image: '',
+  country: '',
 };
 
 export const dataSlice = createSlice({

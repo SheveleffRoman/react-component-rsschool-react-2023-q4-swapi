@@ -60,10 +60,12 @@ const schema = yup
       .test('fileSize', 'Only documents up to 2MB are permitted', (files) => {
         return Array.from(files).every((file) => file.size <= 2_000_000);
       }),
+    country: yup.string().required(),
   })
   .required();
 
 function RHF() {
+  const { countries } = useAppSelector((state) => state.countrySlice);
   const {} = useAppSelector((state) => state.dataSlice);
   const { setData } = dataSlice.actions;
   const dispatch = useAppDispatch();
@@ -116,7 +118,7 @@ function RHF() {
         />
         <p>{errors.confirmPassword?.message}</p>
         <fieldset>
-          <legend>Select a gender:</legend>
+          <legend>Select a gender</legend>
 
           <div>
             <input
@@ -145,8 +147,40 @@ function RHF() {
           <label htmlFor="terms">I agree to the Terms & Conditions </label>
           <p>{errors.terms?.message}</p>
         </fieldset>
-        <input type="file" {...register('image')} />
-        <p>{errors.image?.message}</p>
+        <fieldset>
+          <legend>Load file</legend>
+          <input type="file" {...register('image')} />
+          <p>{errors.image?.message}</p>
+        </fieldset>
+        <fieldset>
+          <legend>Select country</legend>
+          {/* <label htmlFor="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            list="countries"
+            {...register('country')}
+          />
+          <datalist id="countries">
+            {countries.map((country) => (
+              <option key={country} value={country} />
+            ))}
+          </datalist> */}
+          <label htmlFor="country">Выберите страну:</label>
+          <input
+            type="text"
+            id="country"
+            list="countryList"
+            placeholder="Выберите страну..."
+            {...register('country')}
+          />
+          <datalist id="countryList">
+            {countries.map((country) => (
+              <option key={country} value={country} />
+            ))}
+          </datalist>
+          <p>{errors.country?.message}</p>
+        </fieldset>
         <div>
           {' '}
           <button type="submit">Send form</button>

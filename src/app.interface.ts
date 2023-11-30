@@ -7,6 +7,7 @@ export interface FormData {
   gender: string;
   terms: boolean;
   image: FileList;
+  country: string;
 }
 
 export interface IStore {
@@ -18,4 +19,9 @@ export interface IStore {
   gender: string;
   terms: boolean;
   image: string;
+  country: string;
+}
+
+export interface CountriesStore {
+  countries: string[];
 }
