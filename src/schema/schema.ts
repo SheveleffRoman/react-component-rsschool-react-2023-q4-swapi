@@ -45,9 +45,7 @@ export const schema = yup
       })
       .test('fileFormat', 'Only JPG or PNG files are allowed', (files) => {
         return Array.from(files).every(
-          (file) =>
-            file.name.toLowerCase().endsWith('.jpg') ||
-            file.name.toLowerCase().endsWith('.png')
+          (file) => file.type === 'image/png' || file.type === 'image/jpeg'
         );
       })
       .test('fileSize', 'Only documents up to 2MB are permitted', (files) => {
