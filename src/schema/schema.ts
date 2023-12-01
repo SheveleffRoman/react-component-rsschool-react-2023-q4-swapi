@@ -33,8 +33,8 @@ export const schema = yup
     password: yup.string().password().required(),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), undefined], 'Passwords must match')
-      .required('Password confirmation is required'),
+      .required('Password confirmation is required')
+      .oneOf([yup.ref('password')], 'Passwords must match'),
     gender: yup.string().required('Gender is required'),
     terms: yup.boolean().oneOf([true], 'Agree is required').required(),
     image: yup
