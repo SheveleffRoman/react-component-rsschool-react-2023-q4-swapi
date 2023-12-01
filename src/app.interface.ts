@@ -25,3 +25,7 @@ export interface IStore {
 export interface CountriesStore {
   countries: string[];
 }
+
+export interface CollectSubmit {
+  collection: IStore[];
+}
