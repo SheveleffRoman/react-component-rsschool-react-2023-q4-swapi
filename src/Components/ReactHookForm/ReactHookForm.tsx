@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FormData } from '../../app.interface';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { dataSlice } from '../../store/reducers/dataSlice';
@@ -69,6 +69,7 @@ function RHF() {
   const {} = useAppSelector((state) => state.dataSlice);
   const { setData } = dataSlice.actions;
   const dispatch = useAppDispatch();
+  const navigator = useNavigate();
 
   const {
     register,
@@ -83,15 +84,14 @@ function RHF() {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const imageBase64 = await convertToBase64(data.image[0]);
-    console.log(imageBase64);
     dispatch(
       setData({
         ...data,
         image: imageBase64,
       })
     );
-    console.log(data);
     reset();
+    navigator('/');
   };
 
   return (
@@ -99,27 +99,65 @@ function RHF() {
       <h1>React Hook Form</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('name')} type="text" placeholder="name" />
-        <p>{errors.name?.message}</p>
-        <input {...register('age')} placeholder="age" />
-        <p>{errors.age?.message}</p>
-        <input {...register('email')} placeholder="email@example.com" />
-        <p>{errors.email?.message}</p>
-        <input
-          type="password"
-          {...register('password')}
-          placeholder="password"
-        />
-        <p>{errors.password?.message}</p>
-        <input
-          type="password"
-          {...register('confirmPassword')}
-          placeholder="confirm password"
-        />
-        <p>{errors.confirmPassword?.message}</p>
+        <fieldset>
+          <legend>Name</legend>
+          <label htmlFor="name">Name: </label>
+          <input
+            id="name"
+            {...register('name')}
+            type="text"
+            placeholder="name"
+            autoComplete="name"
+          />
+          <p>{errors.name?.message}</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Age</legend>
+          <label htmlFor="age">Age: </label>
+          <input id="age" {...register('age')} placeholder="age" />
+          <p>{errors.age?.message}</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Email</legend>
+          <label htmlFor="email">Email: </label>
+          <input
+            id="email"
+            {...register('email')}
+            placeholder="email@example.com"
+            autoComplete="email"
+          />
+          <p>{errors.email?.message}</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Password</legend>
+          <section>
+            <label htmlFor="password">Password: </label>
+            <input
+              id="password"
+              type="password"
+              {...register('password')}
+              placeholder="password"
+            />
+            <p>{errors.password?.message}</p>
+          </section>
+
+          <section>
+            <label htmlFor="confirmPassword">Confirm: </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              {...register('confirmPassword')}
+              placeholder="confirm password"
+            />
+            <p>{errors.confirmPassword?.message}</p>
+          </section>
+        </fieldset>
+
         <fieldset>
           <legend>Select a gender</legend>
-
           <div>
             <input
               type="radio"
@@ -141,37 +179,29 @@ function RHF() {
           </div>
           <p>{errors.gender?.message}</p>
         </fieldset>
+
         <fieldset>
           <legend>Terms & Conditions</legend>
           <input type="checkbox" id="terms" {...register('terms')} />
           <label htmlFor="terms">I agree to the Terms & Conditions </label>
           <p>{errors.terms?.message}</p>
         </fieldset>
+
         <fieldset>
           <legend>Load file</legend>
           <input type="file" {...register('image')} />
           <p>{errors.image?.message}</p>
         </fieldset>
+
         <fieldset>
           <legend>Select country</legend>
-          {/* <label htmlFor="country">Country</label>
-          <input
-            type="text"
-            id="country"
-            list="countries"
-            {...register('country')}
-          />
-          <datalist id="countries">
-            {countries.map((country) => (
-              <option key={country} value={country} />
-            ))}
-          </datalist> */}
-          <label htmlFor="country">Выберите страну:</label>
+          <label htmlFor="country">Choose country: </label>
           <input
             type="text"
             id="country"
             list="countryList"
-            placeholder="Выберите страну..."
+            placeholder="type country"
+            autoComplete="address"
             {...register('country')}
           />
           <datalist id="countryList">
