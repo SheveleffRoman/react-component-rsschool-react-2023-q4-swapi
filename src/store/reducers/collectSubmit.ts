@@ -14,7 +14,7 @@ export const collectSubmit = createSlice({
     builder.addCase(
       dataSlice.actions.setData,
       (state, action: PayloadAction<IStore>) => {
-        state.collection.push(action.payload);
+        state.collection.unshift(action.payload);
       }
     );
   },
