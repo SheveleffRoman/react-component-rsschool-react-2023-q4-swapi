@@ -26,7 +26,8 @@ const FormInfo = ({ form }: { form: IStore }) => {
         <b>Accepted terms:</b> {form.terms ? 'Yes' : 'No'}
       </div>
       <div>
-        <b>Image Base64:</b> {form.image.slice(0, 30)} ...
+        <b>Image Base64:</b>
+        <img src={form.image}></img>
       </div>
     </div>
   );
