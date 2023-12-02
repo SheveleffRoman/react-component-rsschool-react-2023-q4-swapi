@@ -8,6 +8,7 @@ export interface FormData {
   terms: boolean;
   image: FileList;
   country: string;
+  from?: string;
 }
 
 export interface IStore {
@@ -20,6 +21,7 @@ export interface IStore {
   terms: boolean;
   image: string;
   country: string;
+  from?: string;
 }
 
 export interface CountriesStore {

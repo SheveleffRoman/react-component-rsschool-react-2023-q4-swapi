@@ -3,12 +3,18 @@ import { IStore } from '../../app.interface';
 const FormInfo = ({ form }: { form: IStore }) => {
   return (
     <div className="form-info">
-      <h3>{form.name}</h3>
+      <h3>Data from {form.from}</h3>
+      <div>
+        <b>Name:</b> {form.name}
+      </div>
       <div>
         <b>Age:</b> {form.age}
       </div>
       <div>
         <b>Email:</b> {form.email}
+      </div>
+      <div>
+        <b>Password:</b> {form.password}
       </div>
       <div>
         <b>Gender:</b> {form.gender}

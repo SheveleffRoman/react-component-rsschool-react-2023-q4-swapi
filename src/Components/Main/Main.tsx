@@ -14,9 +14,10 @@ function Main() {
       <Link to={'/uncontrolled'}>
         <button>to uncontrolled</button>
       </Link>
-
-      {collection &&
-        collection.map((form) => <FormInfo form={form} key={form.name} />)}
+      <div className="form-submits">
+        {collection &&
+          collection.map((form, index) => <FormInfo form={form} key={index} />)}
+      </div>
     </>
   );
 }

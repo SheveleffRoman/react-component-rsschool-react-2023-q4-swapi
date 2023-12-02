@@ -31,6 +31,7 @@ function RHF() {
       setData({
         ...data,
         image: imageBase64,
+        from: 'react hook form',
       })
     );
     reset();
