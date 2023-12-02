@@ -4,10 +4,14 @@ import { schema } from '../../schema/schema';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { convertToBase64 } from '../converterBase64';
 import { dataSlice } from '../../store/reducers/dataSlice';
+import { errorSlice } from '../../store/reducers/errorsSlice';
+import { ValidationError } from 'yup';
 
 function Uncontrolled() {
   const { countries } = useAppSelector((state) => state.countrySlice);
+  const error = useAppSelector((state) => state.errorsSlice);
   const { setData } = dataSlice.actions;
+  const { setErrors, clearErrors } = errorSlice.actions;
   const dispatch = useAppDispatch();
   const navigator = useNavigate();
 
@@ -32,6 +36,8 @@ function Uncontrolled() {
     const terms = inputTermsRef.current!.checked;
     const image = inputImageRef.current!.files;
     const country = inputCountryRef.current!.value;
+
+    dispatch(clearErrors());
 
     try {
       await schema.validate(
@@ -64,8 +70,10 @@ function Uncontrolled() {
         })
       );
       navigator('/');
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        dispatch(setErrors(error.inner));
+      }
     }
   };
 
@@ -83,21 +91,15 @@ function Uncontrolled() {
             autoComplete="name"
             name="name"
             ref={inputNameRef}
-            defaultValue={'Roman'}
           />
-          {/* <p>{errors.name?.message}</p> */}
+          <p>{error.name ? error.name : ''}</p>
         </fieldset>
 
         <fieldset>
           <legend>Age</legend>
           <label htmlFor="age">Age: </label>
-          <input
-            id="age"
-            placeholder="age"
-            ref={inputAgeRef}
-            defaultValue={25}
-          />
-          {/* <p>{errors.age?.message}</p> */}
+          <input id="age" placeholder="age" ref={inputAgeRef} />
+          <p>{error.age ? error.age : ''}</p>
         </fieldset>
 
         <fieldset>
@@ -109,9 +111,8 @@ function Uncontrolled() {
             placeholder="email@example.com"
             autoComplete="email"
             ref={inputEmailRef}
-            defaultValue={'Roman@yandex.com'}
           />
-          {/* <p>{errors.email?.message}</p> */}
+          <p>{error.email ? error.email : ''}</p>
         </fieldset>
 
         <fieldset>
@@ -120,24 +121,22 @@ function Uncontrolled() {
             <label htmlFor="password">Password: </label>
             <input
               id="password"
-              type="text"
+              type="password"
               placeholder="password"
               ref={inputPasswordRef}
-              defaultValue={'Romanik16)'}
             />
-            {/* <p>{errors.password?.message}</p> */}
+            <p>{error.password ? error.password : ''}</p>
           </section>
 
           <section>
             <label htmlFor="confirmPassword">Confirm: </label>
             <input
               id="confirmPassword"
-              type="text"
+              type="password"
               placeholder="confirm password"
               ref={inputPasswordConfirmationRef}
-              defaultValue={'Romanik16)'}
             />
-            {/* <p>{errors.confirmPassword?.message}</p> */}
+            <p>{error.confirmPassword ? error.confirmPassword : ''}</p>
           </section>
         </fieldset>
 
@@ -148,8 +147,8 @@ function Uncontrolled() {
               type="radio"
               id="male"
               value="male"
+              name="gender"
               ref={inputGenderRef}
-              defaultChecked
             />
             <label htmlFor="male">Male</label>
           </div>
@@ -159,29 +158,25 @@ function Uncontrolled() {
               type="radio"
               id="female"
               value="female"
+              name="gender"
               ref={inputGenderRef}
             />
             <label htmlFor="female">Female</label>
           </div>
-          {/* <p>{errors.gender?.message}</p> */}
+          <p>{error.gender ? error.gender : ''}</p>
         </fieldset>
 
         <fieldset>
           <legend>Terms & Conditions</legend>
-          <input
-            type="checkbox"
-            id="terms"
-            ref={inputTermsRef}
-            defaultChecked
-          />
+          <input type="checkbox" id="terms" ref={inputTermsRef} />
           <label htmlFor="terms">I agree to the Terms & Conditions </label>
-          {/* <p>{errors.terms?.message}</p> */}
+          <p>{error.terms ? error.terms : ''}</p>
         </fieldset>
 
         <fieldset>
           <legend>Load file</legend>
           <input type="file" ref={inputImageRef} />
-          {/* <p>{errors.image?.message}</p> */}
+          <p>{error.image ? error.image : ''}</p>
         </fieldset>
 
         <fieldset>
@@ -194,27 +189,15 @@ function Uncontrolled() {
             placeholder="type country"
             autoComplete="address"
             ref={inputCountryRef}
-            defaultValue={'Russia'}
           />
           <datalist id="countryList">
             {countries.map((country) => (
               <option key={country} value={country} />
             ))}
           </datalist>
-          {/* <p>{errors.country?.message}</p> */}
+          <p>{error.country ? error.country : ''}</p>
         </fieldset>
 
-        {/* 
-
-        
-
-       
-
-        
-
-        
-
-        */}
         <div>
           {' '}
           <button type="submit">Send form</button>

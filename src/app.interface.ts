@@ -31,3 +31,15 @@ export interface CountriesStore {
 export interface CollectSubmit {
   collection: IStore[];
 }
+
+export interface Errors {
+  name: string;
+  age: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+  terms: string;
+  image: string;
+  country: string;
+}
