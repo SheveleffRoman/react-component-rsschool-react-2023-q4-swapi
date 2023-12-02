@@ -9,10 +9,10 @@ function Main() {
     <>
       <h1>Main Route </h1>
       <Link to={'/RHF'}>
-        <button>to RHF</button>
+        <button>React Hook Form</button>
       </Link>
       <Link to={'/uncontrolled'}>
-        <button>to uncontrolled</button>
+        <button>Uncontrolled Form</button>
       </Link>
       <div className="form-submits">
         {collection &&

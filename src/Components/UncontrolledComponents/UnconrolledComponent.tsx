@@ -79,7 +79,7 @@ function Uncontrolled() {
 
   return (
     <>
-      <h1>Uncontrolled Route</h1>
+      <h1>Uncontrolled Form</h1>
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Name</legend>
