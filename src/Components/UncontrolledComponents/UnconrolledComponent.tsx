@@ -1,10 +1,14 @@
 import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { schema } from '../../schema/schema';
-import { useAppSelector } from '../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { convertToBase64 } from '../converterBase64';
+import { dataSlice } from '../../store/reducers/dataSlice';
 
 function Uncontrolled() {
   const { countries } = useAppSelector((state) => state.countrySlice);
+  const { setData } = dataSlice.actions;
+  const dispatch = useAppDispatch();
   const navigator = useNavigate();
 
   const inputNameRef = useRef<HTMLInputElement>(null);
@@ -19,15 +23,15 @@ function Uncontrolled() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const name = inputNameRef.current?.value;
-    const age = inputAgeRef.current?.value;
-    const email = inputEmailRef.current?.value;
-    const password = inputPasswordRef.current?.value;
-    const confirmPassword = inputPasswordConfirmationRef.current?.value;
-    const gender = inputGenderRef.current?.value;
-    const terms = inputTermsRef.current?.checked;
-    const image = inputImageRef.current?.files;
-    const country = inputCountryRef.current?.value;
+    const name = inputNameRef.current!.value;
+    const age = Number(inputAgeRef.current!.value);
+    const email = inputEmailRef.current!.value;
+    const password = inputPasswordRef.current!.value;
+    const confirmPassword = inputPasswordConfirmationRef.current!.value;
+    const gender = inputGenderRef.current!.value;
+    const terms = inputTermsRef.current!.checked;
+    const image = inputImageRef.current!.files;
+    const country = inputCountryRef.current!.value;
 
     try {
       await schema.validate(
@@ -43,6 +47,21 @@ function Uncontrolled() {
           country,
         },
         { abortEarly: false }
+      );
+      const imageBase64 = await convertToBase64(image![0]);
+      dispatch(
+        setData({
+          name,
+          age,
+          email,
+          password,
+          confirmPassword,
+          gender,
+          terms,
+          country,
+          image: imageBase64,
+          from: 'uncontrolled form',
+        })
       );
       navigator('/');
     } catch (err) {
