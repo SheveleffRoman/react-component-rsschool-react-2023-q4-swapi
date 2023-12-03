@@ -19,7 +19,6 @@ function RHF() {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -39,106 +38,72 @@ function RHF() {
   };
 
   return (
-    <>
+    <div className="wrapper">
       <h1>React Hook Form</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <fieldset>
-          <legend>Name</legend>
+        <div className="input-box">
           <label htmlFor="name">Name: </label>
           <input
             id="name"
             {...register('name')}
             type="text"
             placeholder="name"
-            autoComplete="name"
+            autoComplete="off"
+            className={`${errors.name ? 'error' : ''}`}
           />
-          <p>{errors.name?.message}</p>
-        </fieldset>
+          {errors.name && <p>{errors.name?.message}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Age</legend>
+        <div className="input-box">
           <label htmlFor="age">Age: </label>
-          <input id="age" {...register('age')} placeholder="age" />
-          <p>{errors.age?.message}</p>
-        </fieldset>
+          <input
+            autoComplete="off"
+            id="age"
+            {...register('age')}
+            placeholder="age"
+            className={`${errors.age ? 'error' : ''}`}
+          />
+          {errors.age && <p>{errors.age?.message}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Email</legend>
+        <div className="input-box">
           <label htmlFor="email">Email: </label>
           <input
             id="email"
             {...register('email')}
             placeholder="email@example.com"
-            autoComplete="email"
+            autoComplete="off"
+            className={`${errors.email ? 'error' : ''}`}
           />
-          <p>{errors.email?.message}</p>
-        </fieldset>
+          {errors.email && <p>{errors.email?.message}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Password</legend>
-          <section>
-            <label htmlFor="password">Password: </label>
-            <input
-              id="password"
-              type="password"
-              {...register('password')}
-              placeholder="password"
-            />
-            <p>{errors.password?.message}</p>
-          </section>
+        <div className="input-box">
+          <label htmlFor="password">Password: </label>
+          <input
+            id="password"
+            type="password"
+            {...register('password')}
+            placeholder="password"
+            className={`${errors.password ? 'error' : ''}`}
+          />
+          {errors.password && <p>{errors.password?.message}</p>}
+        </div>
 
-          <section>
-            <label htmlFor="confirmPassword">Confirm: </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              {...register('confirmPassword')}
-              placeholder="confirm password"
-            />
-            <p>{errors.confirmPassword?.message}</p>
-          </section>
-        </fieldset>
+        <div className="input-box">
+          <label htmlFor="confirmPassword">Confirm: </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            {...register('confirmPassword')}
+            placeholder="confirm password"
+            className={`${errors.confirmPassword ? 'error' : ''}`}
+          />
+          {errors.confirmPassword && <p>{errors.confirmPassword?.message}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Select a gender</legend>
-          <div>
-            <input
-              type="radio"
-              id="male"
-              value="male"
-              {...register('gender')}
-            />
-            <label htmlFor="male">Male</label>
-          </div>
-
-          <div>
-            <input
-              type="radio"
-              id="female"
-              value="female"
-              {...register('gender')}
-            />
-            <label htmlFor="female">Female</label>
-          </div>
-          <p>{errors.gender?.message}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Terms & Conditions</legend>
-          <input type="checkbox" id="terms" {...register('terms')} />
-          <label htmlFor="terms">I agree to the Terms & Conditions </label>
-          <p>{errors.terms?.message}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Load file</legend>
-          <input type="file" {...register('image')} />
-          <p>{errors.image?.message}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Select country</legend>
+        <div className="input-box">
           <label htmlFor="country">Choose country: </label>
           <input
             type="text"
@@ -147,37 +112,60 @@ function RHF() {
             placeholder="type country"
             autoComplete="address"
             {...register('country')}
+            className={`${errors.country ? 'error' : ''}`}
           />
           <datalist id="countryList">
             {countries.map((country) => (
               <option key={country} value={country} />
             ))}
           </datalist>
-          <p>{errors.country?.message}</p>
-        </fieldset>
+          {errors.country && <p>{errors.country?.message}</p>}
+        </div>
+
+        <div className="input-gender">
+          <div className="centred-radio">
+            <div>
+              <input
+                type="radio"
+                id="male"
+                value="male"
+                {...register('gender')}
+              />
+              <label htmlFor="male">Male</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="female"
+                value="female"
+                {...register('gender')}
+              />
+              <label htmlFor="female">Female</label>
+            </div>
+          </div>
+          {errors.gender && <p>{errors.gender?.message}</p>}
+        </div>
+
+        <div className="input-checkbox">
+          <input type="checkbox" id="terms" {...register('terms')} />
+          <label htmlFor="terms">I agree to the Terms & Conditions </label>
+          {errors.terms && <p>{errors.terms?.message}</p>}
+        </div>
+
+        <div className="input-file">
+          <input type="file" {...register('image')} />
+          {errors.image && <p>{errors.image?.message}</p>}
+        </div>
+
         <div>
           {' '}
           <button type="submit">Send form</button>
         </div>
       </form>
-      <button
-        onClick={() => {
-          setValue('name', 'Roman');
-          setValue('age', 26);
-          setValue('email', 'roman@yandex.ru');
-          setValue('gender', 'male');
-          setValue('terms', true);
-          setValue('password', 'Romanik16)');
-          setValue('confirmPassword', 'Romanik16)');
-        }}
-      >
-        Fill data
-      </button>
-
       <Link to={'/'}>
-        <button>to main</button>
+        <button>Main page</button>
       </Link>
-    </>
+    </div>
   );
 }
 

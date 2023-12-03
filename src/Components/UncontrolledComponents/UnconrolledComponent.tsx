@@ -20,7 +20,8 @@ function Uncontrolled() {
   const inputEmailRef = useRef<HTMLInputElement>(null);
   const inputPasswordRef = useRef<HTMLInputElement>(null);
   const inputPasswordConfirmationRef = useRef<HTMLInputElement>(null);
-  const inputGenderRef = useRef<HTMLInputElement>(null);
+  const inputMaleRef = useRef<HTMLInputElement>(null);
+  const inputFemaleRef = useRef<HTMLInputElement>(null);
   const inputTermsRef = useRef<HTMLInputElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
   const inputCountryRef = useRef<HTMLInputElement>(null);
@@ -32,10 +33,20 @@ function Uncontrolled() {
     const email = inputEmailRef.current!.value;
     const password = inputPasswordRef.current!.value;
     const confirmPassword = inputPasswordConfirmationRef.current!.value;
-    const gender = inputGenderRef.current!.value;
     const terms = inputTermsRef.current!.checked;
     const image = inputImageRef.current!.files;
     const country = inputCountryRef.current!.value;
+    const genderMale = inputMaleRef.current!;
+    const genderFemale = inputFemaleRef.current!;
+    let gender = '';
+
+    if (!genderMale.checked && !genderFemale.checked) {
+      gender = '';
+    } else if (genderMale.checked) {
+      gender = genderMale.value;
+    } else {
+      gender = genderFemale.value;
+    }
 
     dispatch(clearErrors());
 
@@ -78,11 +89,11 @@ function Uncontrolled() {
   };
 
   return (
-    <>
+    <div className="wrapper">
       <h1>Uncontrolled Form</h1>
+
       <form onSubmit={handleSubmit}>
-        <fieldset>
-          <legend>Name</legend>
+        <div className="input-box">
           <label htmlFor="name">Name: </label>
           <input
             id="name"
@@ -91,19 +102,23 @@ function Uncontrolled() {
             autoComplete="name"
             name="name"
             ref={inputNameRef}
+            className={`${error.name ? 'error' : ''}`}
           />
-          <p>{error.name ? error.name : ''}</p>
-        </fieldset>
+          {error.name && <p>{error.name ? error.name : ''}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Age</legend>
+        <div className="input-box">
           <label htmlFor="age">Age: </label>
-          <input id="age" placeholder="age" ref={inputAgeRef} />
-          <p>{error.age ? error.age : ''}</p>
-        </fieldset>
+          <input
+            id="age"
+            placeholder="age"
+            ref={inputAgeRef}
+            className={`${error.age ? 'error' : ''}`}
+          />
+          {error.age && <p>{error.age ? error.age : ''}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Email</legend>
+        <div className="input-box">
           <label htmlFor="email">Email: </label>
           <input
             type="text"
@@ -111,76 +126,38 @@ function Uncontrolled() {
             placeholder="email@example.com"
             autoComplete="email"
             ref={inputEmailRef}
+            className={`${error.email ? 'error' : ''}`}
           />
-          <p>{error.email ? error.email : ''}</p>
-        </fieldset>
+          {error.email && <p>{error.email ? error.email : ''}</p>}
+        </div>
 
-        <fieldset>
-          <legend>Password</legend>
-          <section>
-            <label htmlFor="password">Password: </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="password"
-              ref={inputPasswordRef}
-            />
-            <p>{error.password ? error.password : ''}</p>
-          </section>
+        <div className="input-box">
+          <label htmlFor="password">Password: </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="password"
+            ref={inputPasswordRef}
+            className={`${error.password ? 'error' : ''}`}
+          />
+          {error.password && <p>{error.password ? error.password : ''}</p>}
+        </div>
 
-          <section>
-            <label htmlFor="confirmPassword">Confirm: </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="confirm password"
-              ref={inputPasswordConfirmationRef}
-            />
+        <div className="input-box">
+          <label htmlFor="confirmPassword">Confirm: </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            placeholder="confirm password"
+            ref={inputPasswordConfirmationRef}
+            className={`${error.confirmPassword ? 'error' : ''}`}
+          />
+          {error.confirmPassword && (
             <p>{error.confirmPassword ? error.confirmPassword : ''}</p>
-          </section>
-        </fieldset>
+          )}
+        </div>
 
-        <fieldset>
-          <legend>Select a gender</legend>
-          <div>
-            <input
-              type="radio"
-              id="male"
-              value="male"
-              name="gender"
-              ref={inputGenderRef}
-            />
-            <label htmlFor="male">Male</label>
-          </div>
-
-          <div>
-            <input
-              type="radio"
-              id="female"
-              value="female"
-              name="gender"
-              ref={inputGenderRef}
-            />
-            <label htmlFor="female">Female</label>
-          </div>
-          <p>{error.gender ? error.gender : ''}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Terms & Conditions</legend>
-          <input type="checkbox" id="terms" ref={inputTermsRef} />
-          <label htmlFor="terms">I agree to the Terms & Conditions </label>
-          <p>{error.terms ? error.terms : ''}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Load file</legend>
-          <input type="file" ref={inputImageRef} />
-          <p>{error.image ? error.image : ''}</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Select country</legend>
+        <div className="input-box">
           <label htmlFor="country">Choose country: </label>
           <input
             type="text"
@@ -189,14 +166,54 @@ function Uncontrolled() {
             placeholder="type country"
             autoComplete="address"
             ref={inputCountryRef}
+            className={`${error.country ? 'error' : ''}`}
           />
           <datalist id="countryList">
             {countries.map((country) => (
               <option key={country} value={country} />
             ))}
           </datalist>
-          <p>{error.country ? error.country : ''}</p>
-        </fieldset>
+          {error.country && <p>{error.country ? error.country : ''}</p>}
+        </div>
+
+        <div className="input-gender">
+          <div className="centred-radio">
+            <div>
+              <input
+                type="radio"
+                id="male"
+                value="male"
+                name="gender"
+                ref={inputMaleRef}
+              />
+              <label htmlFor="male">Male</label>
+            </div>
+
+            <div>
+              <input
+                type="radio"
+                id="female"
+                value="female"
+                name="gender"
+                ref={inputFemaleRef}
+              />
+              <label htmlFor="female">Female</label>
+            </div>
+          </div>
+          {error.gender && <p>{error.gender ? error.gender : ''}</p>}
+        </div>
+
+        <div className="input-checkbox">
+          <input type="checkbox" id="terms" ref={inputTermsRef} />
+          <label htmlFor="terms">I agree to the Terms & Conditions </label>
+          {error.terms && <p>{error.terms ? error.terms : ''}</p>}
+        </div>
+
+        <div className="input-file">
+          <legend>Load file</legend>
+          <input type="file" ref={inputImageRef} />
+          {error.image && <p>{error.image ? error.image : ''}</p>}
+        </div>
 
         <div>
           {' '}
@@ -204,9 +221,9 @@ function Uncontrolled() {
         </div>
       </form>
       <Link to={'/'}>
-        <button>to main</button>
+        <button>Main page</button>
       </Link>
-    </>
+    </div>
   );
 }
 
