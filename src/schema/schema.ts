@@ -28,6 +28,7 @@ export const schema = yup
       .transform((value) => (Number.isNaN(value) ? null : value))
       .nullable()
       .positive()
+      .max(100)
       .required(),
     email: yup.string().email().required(),
     password: yup.string().password().required(),
